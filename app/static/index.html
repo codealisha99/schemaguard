@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Turn messy LLM output into validated JSON. Deterministic repairs, strict schemas, and a transparent repair trace."
+    />
+    <meta name="theme-color" content="#f6f7fb" />
+    <title>SchemaGuard · JSON repair playground</title>
+    <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/static/fonts/manrope.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/components.js" defer></script>
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="/" aria-label="SchemaGuard home"
+        ><svg
+          class="brand-mark"
+          viewBox="0 0 36 36"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect width="36" height="36" rx="10" fill="currentColor" />
+          <path
+            d="M13 10h-2l-2 8 2 8h2m10-16h2l2 8-2 8h-2m-9-8 3 3 6-7"
+            stroke="white"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          /></svg
+        >SchemaGuard</a
+      >
+      <nav aria-label="Main navigation">
+        <a class="nav-playground" href="#playground">Playground</a
+        ><a href="/docs" class="nav-docs"
+          >API docs <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="intro-pill">
+          <span class="signal"></span> Structure you can trust
+        </div>
+        <h1>Turn messy LLM output<br />into validated JSON.</h1>
+        <p>
+          From almost-right to ready-to-use. Repair the syntax, validate the
+          schema,<br class="desktop" />
+          and see every step along the way.
+        </p>
+        <div class="hero-features">
+          <span><span aria-hidden="true">✓</span> No API key needed</span
+          ><span><span aria-hidden="true">✓</span> No LLM calls</span
+          ><span><span aria-hidden="true">✓</span> Nothing stored</span>
+        </div>
+      </section>
+      <section class="playground" id="playground" aria-label="JSON playground">
+        <div class="workspace-title">
+          <div>
+            <span class="workspace-symbol" aria-hidden="true">{ }</span>
+            <h2>JSON playground</h2>
+            <span class="workspace-caption"
+              >A little structure goes a long way.</span
+            >
+          </div>
+          <div class="workspace-run">
+            <span class="shortcut"><kbd>⌘</kbd><kbd>↵</kbd></span
+            ><button
+              class="primary"
+              id="run"
+              aria-label="Repair &amp; validate"
+            >
+              Repair &amp; validate <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+        <div class="setup">
+          <div>
+            <span id="schema-label">Schema</span>
+            <div
+              id="schema-tabs"
+              role="tablist"
+              aria-labelledby="schema-label"
+            ></div>
+            <select id="schema" hidden aria-hidden="true" tabindex="-1">
+              <option value="UserProfile">User profile</option>
+              <option value="ProductListing">Product listing</option>
+              <option value="SupportTicket">Support ticket</option></select
+            ><span id="schema-fields" class="schema-fields"
+              >name <span>·</span> age <span>·</span> skills</span
+            >
+          </div>
+          <div class="schema-tools">
+            <span id="service-state" class="service-state"
+              ><span class="signal"></span> Checking service</span
+            >
+            <details class="schema-details">
+              <summary>View schema <span aria-hidden="true">{ }</span></summary>
+              <pre id="schema-view">Loading schema…</pre>
+            </details>
+          </div>
+        </div>
+        <div class="examples">
+          <span>Start with an example</span>
+          <div id="examples"></div>
+        </div>
+        <div class="editors" id="schema-panel" role="tabpanel">
+          <div class="input-panel">
+            <div class="panel-head">
+              <div class="file-label">
+                <span class="file-icon" aria-hidden="true">{ }</span
+                ><label for="input">Raw output</label
+                ><span class="file-extension">input.json</span>
+              </div>
+              <button
+                id="format"
+                class="text-button"
+                title="Safely format valid JSON"
+              >
+                Format JSON
+              </button>
+            </div>
+            <div class="input-editor">
+              <pre id="line-numbers" aria-hidden="true">1</pre>
+              <textarea
+                id="input"
+                spellcheck="false"
+                wrap="off"
+                aria-describedby="input-help"
+                placeholder="Paste your LLM output here…"
+              ></textarea>
+            </div>
+            <div id="input-help" class="editor-foot">
+              <span><span class="editor-dot"></span> Editable input</span
+              ><span id="count">0 / 16,384</span>
+            </div>
+          </div>
+          <div class="output-panel" data-state="neutral">
+            <div class="panel-head">
+              <div class="file-label">
+                <span class="file-icon" aria-hidden="true">{ }</span
+                ><span>Validated output</span
+                ><span class="file-extension">output.json</span>
+              </div>
+              <button id="copy" class="text-button" disabled>Copy JSON</button>
+            </div>
+            <div class="output-body">
+              <div class="result-summary">
+                <div id="result-status" class="status neutral">
+                  Ready to validate
+                </div>
+                <span id="duration"></span>
+              </div>
+              <p id="result-description">
+                Run the example to see validated JSON and a step-by-step repair
+                trace.
+              </p>
+              <div id="output-empty" class="output-empty" aria-hidden="true">
+                <span>{<span>✓</span>}</span
+                ><strong>Make room for certainty.</strong>
+                <p>Your validated JSON will appear here.</p>
+              </div>
+              <pre id="output" tabindex="0" aria-label="Validated JSON output">
+Your result will appear here.</pre>
+            </div>
+            <div class="editor-foot">
+              <span id="result-meta"
+                >Only schema-valid objects appear here</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <div>
+            <button id="reset" class="reset-button">↺ Reset playground</button
+            ><span class="session-note"
+              >Processed in memory. Never stored.</span
+            >
+          </div>
+          <label class="fallback-toggle"
+            ><input id="use-fallback" type="checkbox" /><span
+              class="switch"
+              aria-hidden="true"
+            ></span>
+            Use sample fallback</label
+          >
+        </div>
+        <details id="fallback-details">
+          <summary>Inspect the sample fallback</summary>
+          <p>
+            This explicit sample is validated against your selected schema. It
+            replaces failed input; it is not a repair of your data.
+          </p>
+          <pre id="fallback-view"></pre>
+        </details>
+        <p id="notice" role="status" aria-live="polite"></p>
+        <div id="result" aria-live="polite" aria-atomic="true">
+          <div id="errors-section" hidden>
+            <h3>Validation issues</h3>
+            <ul id="errors"></ul>
+          </div>
+          <div class="timeline-heading">
+            <div>
+              <span class="trace-icon" aria-hidden="true">≡</span>
+              <h3>Repair timeline</h3>
+            </div>
+            <span id="attempts">Every attempt, accounted for</span>
+          </div>
+          <ol id="timeline">
+            <li class="pending">
+              <span class="step-dot">·</span>
+              <div>
+                Waiting for input<span
+                  >Run validation to inspect the actual pipeline.</span
+                >
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section class="how">
+        <div class="section-heading">
+          <h2>Predictable by design.<br />Transparent at every step.</h2>
+          <p>
+            Small, deterministic repairs. Strict schema validation.<br
+              class="desktop"
+            />
+            No invented values. No hidden model calls.
+          </p>
+        </div>
+        <div class="how-grid">
+          <a class="process-card" href="#playground"
+            ><article class="process-card-inner">
+              <div class="process-icon" aria-hidden="true">{ }</div>
+              <span class="number">01 / Parse</span>
+              <h3>Start with the original.</h3>
+              <p>
+                Try standard JSON first. Reject ambiguous keys, non-finite
+                numbers, and inputs that exceed resource limits.
+              </p>
+              <span class="process-card-link"
+                >Try it in the playground
+                <span aria-hidden="true">↗</span></span
+              >
+            </article></a
+          >
+          <a class="process-card" href="#playground"
+            ><article class="process-card-inner">
+              <div class="process-icon" aria-hidden="true">↔</div>
+              <span class="number">02 / Repair</span>
+              <h3>Fix syntax, keep meaning.</h3>
+              <p>
+                Remove Markdown fences, convert single-quoted strings, and clean
+                up trailing commas. No guessed fields or brackets.
+              </p>
+              <span class="process-card-link"
+                >Try it in the playground
+                <span aria-hidden="true">↗</span></span
+              >
+            </article></a
+          >
+          <a class="process-card" href="#playground"
+            ><article class="process-card-inner">
+              <div class="process-icon" aria-hidden="true">✓</div>
+              <span class="number">03 / Validate</span>
+              <h3>Get an answer you can inspect.</h3>
+              <p>
+                Check types and required fields with Pydantic. See exactly what
+                passed, what failed, and whether a fallback was used.
+              </p>
+              <span class="process-card-link"
+                >Try it in the playground
+                <span aria-hidden="true">↗</span></span
+              >
+            </article></a
+          >
+        </div>
+        <div class="privacy">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M12 3 4 6v6c0 4 4 7 8 9 4-2 8-5 8-9V6l-8-3Z"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <path d="m8 12 3 3 5-6" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <p>
+            Your input stays in request memory. It is never stored or written to
+            application logs.<br />This is a deterministic demo. It cannot
+            recover every malformed input.
+          </p>
+        </div>
+      </section>
+      <section class="developer">
+        <div>
+          <span class="developer-label">Built for developers</span>
+          <h2>One endpoint.<br />A clearer contract.</h2>
+          <p>
+            Use the same repair and validation pipeline in an API request. No
+            signup or API key required.
+          </p>
+          <a href="/docs" class="developer-link"
+            >Explore the API docs <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="request">
+          <div class="panel-head">
+            <span><span class="http-method">POST</span> /v1/validate</span
+            ><button id="copy-request" class="text-button">Copy request</button>
+          </div>
+          <pre id="api-request"></pre>
+          <div class="request-foot">
+            <span class="signal"></span> JSON in. Validated JSON out.
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <a href="/" class="brand"
+        >SchemaGuard<span class="footer-version"
+          >Deterministic JSON repair</span
+        ></a
+      ><span>Less guesswork. Better structure.</span
+      ><a href="/health">Service health <span aria-hidden="true">↗</span></a>
+    </footer>
+  </body>
+</html>
