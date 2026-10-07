@@ -53,6 +53,7 @@
     const label = document.createElement("span");
     label.className = "run-label";
     label.textContent = labels[state];
+    button.setAttribute("aria-label", labels[state]);
     content.append(icon(kind), label);
     button.replaceChildren(content);
     if (!reducedMotion() && state !== "idle")

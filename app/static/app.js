@@ -175,7 +175,8 @@ $("reset").addEventListener("click", () => {
 });
 $("format").addEventListener("click", async () => {
   if (busy) return;
-  setBusy(true);
+  SchemaGuardUI.renderRunButton($("run"));
+  setBusy(true, "idle", false);
   const abort = new AbortController(),
     timeout = setTimeout(() => abort.abort(), 15000);
   try {
@@ -203,7 +204,7 @@ $("format").addEventListener("click", async () => {
         : error.message;
   } finally {
     clearTimeout(timeout);
-    setBusy(false);
+    setBusy(false, "idle", false);
   }
 });
 async function copy(text, button) {
@@ -227,12 +228,13 @@ $("api-request").textContent = apiRequest;
 $("copy-request").addEventListener("click", () =>
   copy(apiRequest, $("copy-request")),
 );
-function setBusy(value, outcome = "idle") {
+function setBusy(value, outcome = "idle", run = true) {
   busy = value;
   document
     .querySelectorAll("button, select, textarea, #use-fallback")
     .forEach((el) => (el.disabled = value));
   $("copy").disabled = value || lastOutput === null;
+  if (!run) return;
   SchemaGuardUI.renderRunButton($("run"), value ? "loading" : outcome);
   $("run").setAttribute("aria-busy", String(value));
   $("result").setAttribute("aria-busy", String(value));
