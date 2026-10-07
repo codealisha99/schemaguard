@@ -7,7 +7,7 @@
       name="description"
       content="Turn messy LLM output into validated JSON. Deterministic repairs, strict schemas, and a transparent repair trace."
     />
-    <meta name="theme-color" content="#e8ebf2" />
+    <meta name="theme-color" content="#ffffff" />
     <title>SchemaGuard · JSON repair playground</title>
     <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
     <link
@@ -51,6 +51,11 @@
           <span>Turn messy LLM output</span>
           <span>into validated JSON.</span>
         </h1>
+        <div class="hero-actions">
+          <a class="pill" href="#playground"
+            >Open the playground <span aria-hidden="true">→</span></a
+          ><a class="pill pill-quiet" href="/docs">API docs</a>
+        </div>
         <p>Repair the syntax, check the schema, and show every step.</p>
       </section>
       <section class="playground" id="playground" aria-label="JSON playground">
@@ -219,7 +224,10 @@ Your result will appear here.</pre>
       </section>
       <section class="how">
         <div class="section-heading">
-          <h2>Predictable by design.<br />Transparent at every step.</h2>
+          <div>
+            <span class="kicker">How it works</span>
+            <h2>Predictable by design.<br />Transparent at every step.</h2>
+          </div>
           <p>
             Small, deterministic repairs. Strict schema validation.<br
               class="desktop"
@@ -231,7 +239,7 @@ Your result will appear here.</pre>
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
               <div class="process-icon" aria-hidden="true">{ }</div>
-              <span class="number">01 / Parse</span>
+              <span class="number">01. Parse</span>
               <h3>Start with the original.</h3>
               <p>
                 Try standard JSON first. Reject ambiguous keys, non-finite
@@ -242,7 +250,7 @@ Your result will appear here.</pre>
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
               <div class="process-icon" aria-hidden="true">↔</div>
-              <span class="number">02 / Repair</span>
+              <span class="number">02. Repair</span>
               <h3>Fix syntax, keep meaning.</h3>
               <p>
                 Remove Markdown fences, convert single-quoted strings, and clean
@@ -253,7 +261,7 @@ Your result will appear here.</pre>
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
               <div class="process-icon" aria-hidden="true">✓</div>
-              <span class="number">03 / Validate</span>
+              <span class="number">03. Validate</span>
               <h3>Get an answer you can inspect.</h3>
               <p>
                 Check types and required fields. See what passed, what failed,
