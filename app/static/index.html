@@ -7,7 +7,7 @@
       name="description"
       content="Turn messy LLM output into validated JSON. Deterministic repairs, strict schemas, and a transparent repair trace."
     />
-    <meta name="theme-color" content="#f6f7fb" />
+    <meta name="theme-color" content="#e8ebf2" />
     <title>SchemaGuard · JSON repair playground</title>
     <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
     <link
@@ -42,27 +42,16 @@
       >
       <nav aria-label="Main navigation">
         <a class="nav-playground" href="#playground">Playground</a
-        ><a href="/docs" class="nav-docs"
-          >API docs <span aria-hidden="true">↗</span></a
-        >
+        ><a href="/docs" class="nav-docs">API docs</a>
       </nav>
     </header>
     <main>
       <section class="hero">
-        <div class="intro-pill">
-          <span class="signal"></span> Structure you can trust
-        </div>
-        <h1>Turn messy LLM output<br />into validated JSON.</h1>
-        <p>
-          From almost-right to ready-to-use. Repair the syntax, validate the
-          schema,<br class="desktop" />
-          and see every step along the way.
-        </p>
-        <div class="hero-features">
-          <span><span aria-hidden="true">✓</span> No API key needed</span
-          ><span><span aria-hidden="true">✓</span> No LLM calls</span
-          ><span><span aria-hidden="true">✓</span> Nothing stored</span>
-        </div>
+        <h1>
+          <span>Turn messy LLM output</span>
+          <span>into validated JSON.</span>
+        </h1>
+        <p>Repair the syntax, check the schema, and show every step.</p>
       </section>
       <section class="playground" id="playground" aria-label="JSON playground">
         <div class="workspace-title">
@@ -248,10 +237,6 @@ Your result will appear here.</pre>
                 Try standard JSON first. Reject ambiguous keys, non-finite
                 numbers, and inputs that exceed resource limits.
               </p>
-              <span class="process-card-link"
-                >Try it in the playground
-                <span aria-hidden="true">↗</span></span
-              >
             </article></a
           >
           <a class="process-card" href="#playground"
@@ -263,10 +248,6 @@ Your result will appear here.</pre>
                 Remove Markdown fences, convert single-quoted strings, and clean
                 up trailing commas. No guessed fields or brackets.
               </p>
-              <span class="process-card-link"
-                >Try it in the playground
-                <span aria-hidden="true">↗</span></span
-              >
             </article></a
           >
           <a class="process-card" href="#playground"
@@ -275,13 +256,9 @@ Your result will appear here.</pre>
               <span class="number">03 / Validate</span>
               <h3>Get an answer you can inspect.</h3>
               <p>
-                Check types and required fields with Pydantic. See exactly what
-                passed, what failed, and whether a fallback was used.
+                Check types and required fields. See what passed, what failed,
+                and whether a fallback was used.
               </p>
-              <span class="process-card-link"
-                >Try it in the playground
-                <span aria-hidden="true">↗</span></span
-              >
             </article></a
           >
         </div>
@@ -303,7 +280,6 @@ Your result will appear here.</pre>
       </section>
       <section class="developer">
         <div>
-          <span class="developer-label">Built for developers</span>
           <h2>One endpoint.<br />A clearer contract.</h2>
           <p>
             Use the same repair and validation pipeline in an API request. No
