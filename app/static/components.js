@@ -7,31 +7,10 @@
   const reducedMotion = () =>
     matchMedia("(prefers-reduced-motion: reduce)").matches;
   const feedbackTimers = new WeakMap();
-  const svgNS = "http://www.w3.org/2000/svg";
-
   function icon(kind) {
-    const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill", "none");
-    svg.setAttribute("stroke", "currentColor");
-    svg.setAttribute("stroke-width", "2");
-    svg.setAttribute("stroke-linecap", "round");
-    svg.setAttribute("stroke-linejoin", "round");
-    svg.setAttribute("aria-hidden", "true");
+    const svg = Hugeicons.create({loading:"loading", passed:"check", failure:"alert", fallback:"fallback", idle:"arrow"}[kind]);
     svg.classList.add("run-icon");
-    const path = document.createElementNS(svgNS, "path");
-    path.setAttribute(
-      "d",
-      {
-        loading: "M12 3a9 9 0 1 0 9 9",
-        passed: "M9 12l2 2 4-4 M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18",
-        failure: "M12 8v5m0 3h.01 M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18",
-        fallback: "M4 9h9a6 6 0 0 1 0 12 M4 9l5-5 M4 9l5 5",
-        idle: "M5 12h14m-6-6 6 6-6 6",
-      }[kind],
-    );
     if (kind === "loading") svg.classList.add("run-spinner");
-    svg.append(path);
     return svg;
   }
 

@@ -50,3 +50,33 @@ The playground was redesigned with locally hosted Manrope and JetBrains Mono fon
 Native preview checked desktop widths 1280/1440px and mobile widths 320/375px with no horizontal overflow. All six examples, three schemas, fallback, empty input, reset, safe formatting, and clipboard copy passed. Ctrl/Cmd+Enter executes validation; mobile results scroll into view; schema inspection dismisses on Escape and outside clicks. Syntax highlighting preserved the exact JSON text including quotes, backslashes, and HTML-like content, with no inserted HTML nodes or script execution. No browser JavaScript errors were observed. Screenshots of the desktop workspace, mobile layout, and developer section were reviewed. Secondary text contrast was increased during the review, and reduced-motion preferences are respected.
 
 The API is unchanged by this UI refinement; its 39-test suite still passes with 96.72% host coverage. Font license notices are included under `app/static/fonts/`.
+
+## Aceternity integration and latest work review
+
+Preserved the newer left-aligned monochrome hero, pill controls, simplified explanation cards, author footer/links, button accessible labels, and separation of formatting from validation loading state.
+
+Aceternity's Tabs, Stateful Button, Card Hover Effect, and Dot Background patterns are adapted to the existing DOM/CSS frontend. Original sources and implementation differences are documented in THIRD_PARTY_NOTICES.md. No React runtime or frontend build is needed.
+
+The latest native preview checks passed:
+
+- All six examples and all three schemas; exact valid/repaired/fallback/failure button feedback matches the API result.
+- Schema tabs: one selected tab and one shared active surface; Home/End/arrow navigation and panel labeling work.
+- Run loading: spinner, busy label, and disabled schema controls; feedback returns to idle after its confirmation interval.
+- Formatting: separate `Formatting…` text and `aria-busy`, without suggesting validation occurred; successful formatting returns the control to normal.
+- Network failure: failure feedback and actionable retry text.
+- Card background responds to pointer entry and keyboard focus.
+- HTML-like and escaped-string content remains literal, unchanged JSON; no injected HTML nodes or script execution.
+- Desktop 1440px and mobile 320/375px: no horizontal document overflow; latest author footer remains intact.
+- Backend suite: 39 passed, 96.72% host coverage, one non-failing upstream TestClient deprecation warning.
+
+Native preview screenshot calls were unreliable during this last pass; functional/layout checks completed using the same native preview's DOM evaluation.
+
+## Schema contract, outcome summary, and Hugeicons polish
+
+Added required field/type chips generated from the API schemas, a concise outcome summary with actual transformation chips, clear-input and expand/compact controls, and an edit-input action on failure/fallback. Preserved the newer monochrome design and author footer.
+
+Hugeicons Stroke Rounded 4.3.5 supplies locally served vector icons for editor actions, navigation, explanation cards, loading, repair timeline, and result states. Visible button labels remain intact; decorative SVGs are hidden from assistive technology. Copy feedback preserves the original icon nodes and cancels overlapping feedback timers; formatting and expand/compact controls restore their icons correctly. Package attribution and MIT notice are included.
+
+Native preview checked all six examples, valid/repaired/failure/fallback icons, format and expand/compact controls, and desktop 1280px/mobile 320px and 375px with no horizontal overflow. Editor header contents fit at 375px. A native browser click successfully copied JSON and showed the check icon; programmatic clicks without user activation correctly showed the clipboard-unavailable message. Screenshot capture remained intermittent; DOM/layout checks used the native preview.
+
+Latest backend suite: 39 passed, 96.72% coverage. JavaScript syntax checks passed. Updated Python 3.13 Docker image built successfully.

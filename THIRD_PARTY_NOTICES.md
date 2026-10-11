@@ -10,3 +10,7 @@ The following Aceternity UI components by Manu Arora / Aceternity were reviewed 
 These are lightweight DOM/CSS adaptations, not installed React components. They live in `app/static/components.js` and the Aceternity section of `app/static/style.css`. React, Tailwind, Motion, and a Node build step are not required. Original component sources are referenced rather than redistributed as a component library. Aceternity retains ownership of its original work; see its [license terms](https://ui.aceternity.com/licence).
 
 Manrope and JetBrains Mono are locally hosted fonts under the SIL Open Font License. Their notices are in `app/static/fonts/`.
+
+## Hugeicons
+
+Interface icons are a locally served subset of [Hugeicons](https://hugeicons.com/) Stroke Rounded from `@hugeicons/core-free-icons` **4.3.5**, licensed under MIT. The original vector paths are preserved in `app/static/hugeicons.js`; the copyright and license are included in `app/static/hugeicons-LICENSE.txt`. The DOM renderer avoids a framework, network dependency, or package build step. The SchemaGuard brand mark remains a custom identity asset.

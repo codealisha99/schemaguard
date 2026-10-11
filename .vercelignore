@@ -1,0 +1,10 @@
+.git
+.venv
+.pytest_cache
+.coverage
+__pycache__
+tests
+.env*
+.railway
+.neon
+dist
