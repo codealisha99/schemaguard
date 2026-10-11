@@ -80,3 +80,32 @@ Hugeicons Stroke Rounded 4.3.5 supplies locally served vector icons for editor a
 Native preview checked all six examples, valid/repaired/failure/fallback icons, format and expand/compact controls, and desktop 1280px/mobile 320px and 375px with no horizontal overflow. Editor header contents fit at 375px. A native browser click successfully copied JSON and showed the check icon; programmatic clicks without user activation correctly showed the clipboard-unavailable message. Screenshot capture remained intermittent; DOM/layout checks used the native preview.
 
 Latest backend suite: 39 passed, 96.72% coverage. JavaScript syntax checks passed. Updated Python 3.13 Docker image built successfully.
+
+## Production verification — 2026-10-11
+
+Published the current playground and deployment configuration to
+https://github.com/codealisha99/schemaguard (`main`). Both Railway and Vercel
+are connected to that branch; Git pushes triggered production deployments.
+
+- Frontend: https://schemaguard-theta.vercel.app
+- Railway API: https://api-production-2476.up.railway.app
+- Neon: dedicated `schemaguard` project `small-lake-24728324`, Singapore,
+  Postgres 17, pooled connection stored only as Railway's secret `DATABASE_URL`.
+- Local verification: 41 tests passed; coverage 95.72% (70% gate).
+- Static frontend build: `npm run build` passed.
+- Public API through Vercel: valid, repaired, failure, fallback, formatting,
+  schema definitions, and Swagger documentation passed.
+- `/health` returned HTTP 200 and `status: ok` through both domains.
+- `/health/database` through Vercel returned HTTP 200 and
+  `{"status":"ok","database":"connected"}`, proving Railway-to-Neon connectivity.
+- Shared browser: service online, trailing-comma repair, schema mismatch without
+  fallback, and explicit sample fallback verified. Desktop had no horizontal
+  overflow. All inspected same-origin API requests returned HTTP 200.
+
+Corrected Railway's domain target to its assigned port 8080. Ordered the exact
+Vercel health rewrite before its wildcard to avoid an upstream trailing-slash
+redirect. Used `SET LOCAL statement_timeout` inside a transaction because Neon's
+pooler rejects statement timeout as a startup parameter. No submitted JSON is
+persisted; the database probe only sets its timeout and runs `SELECT 1`.
+
+These results supersede earlier statements that production had not been deployed.
