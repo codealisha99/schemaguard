@@ -9,7 +9,8 @@ The playground includes editable input, six examples per schema, readable output
 Python 3.13 is used by Docker; Python 3.12–3.14 work locally.
 
 ```bash
-cd /Users/abhijitam/Developer/Archive/ai-projects/06-schemaguard
+git clone https://github.com/codealisha99/schemaguard.git
+cd schemaguard
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-dev.txt
@@ -28,7 +29,8 @@ Run tests with `pytest`. The existing 70% coverage gate is retained. Runtime dep
 
 Build and verify the frontend with `npm run build && npm run check:frontend`.
 The visual conventions are documented in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md);
-the local redesign verification is recorded in [AUDIT_REPORT.md](AUDIT_REPORT.md).
+the current local redesign verification is recorded in [docs/REDESIGN_AUDIT.md](docs/REDESIGN_AUDIT.md).
+[AUDIT_REPORT.md](AUDIT_REPORT.md) and [VERIFICATION.md](VERIFICATION.md) record earlier work; they are not current deployment verification.
 
 ## Docker
 
@@ -100,7 +102,13 @@ No required user-provided variables or secrets.
 
 Without a trusted proxy configuration, visitors behind the same proxy share its per-IP allowance. Arbitrary forwarded headers are ignored. Configure `TRUSTED_PROXY_IPS` only with verified infrastructure addresses; do not set `*` on an app that can receive direct untrusted traffic. The global limit applies regardless of forwarded headers. `LLM_PROVIDER` is unused and unnecessary.
 
-## Production deployment
+## Maintenance and contributions
+
+Primary maintainer: [Alisha Karma](https://alishakarma.com) ([codealisha99](https://github.com/codealisha99)). Contact: [lishykarma99@gmail.com](mailto:lishykarma99@gmail.com). Historical Git authorship remains intact; maintenance attribution does not claim sole authorship of existing code. See [CONTRIBUTING.md](CONTRIBUTING.md) for local checks and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for component and font credits.
+
+## Recorded deployment configuration
+
+The following endpoints and service details are recorded from earlier deployment work. This local audit does not verify connected accounts, current production state, or database availability.
 
 - Landing page with working inline editor: https://schemaguard-theta.vercel.app
 - Dedicated playground: https://schemaguard-theta.vercel.app/playground
@@ -114,7 +122,7 @@ Without a trusted proxy configuration, visitors behind the same proxy share its 
 Vercel builds the static frontend with `npm run build`. `vercel.json` forwards
 `/v1/*`, health, and documentation requests to Railway, keeping browser requests
 on the same origin. Railway builds the root Dockerfile and checks `/health`.
-Both projects connect to this repository's `main` branch for automatic deployment.
+The recorded configuration connects both projects to this repository's `main` branch for automatic deployment. Confirm the current account configuration before publishing changes.
 
 `DATABASE_URL` is a secret Railway variable containing the pooled Neon connection
 string. It is never included in the frontend or committed. The optional

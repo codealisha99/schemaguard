@@ -14,3 +14,17 @@ await writeFile(
       "Playground · SchemaGuard",
     ),
 );
+
+const header = template.slice(
+  template.indexOf("<header"),
+  template.indexOf("</header>") + 9,
+);
+const footer = template.slice(
+  template.indexOf("<footer>"),
+  template.indexOf("</footer>") + 9,
+);
+const errorTemplate = await readFile("app/error.html", "utf8");
+await writeFile(
+  "dist/404.html",
+  errorTemplate.replace("{{header}}", header).replace("{{footer}}", footer),
+);

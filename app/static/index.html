@@ -7,7 +7,18 @@
       name="description"
       content="Turn messy LLM output into validated JSON. Deterministic repairs, strict schemas, and a transparent repair trace."
     />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#f7f6f0" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SchemaGuard" />
+    <meta
+      property="og:title"
+      content="SchemaGuard · JSON repair, with evidence"
+    />
+    <meta
+      property="og:description"
+      content="Conservative syntax repairs, three strict schemas, and a trace you can inspect. Try the playground or use the API."
+    />
+    <meta name="twitter:card" content="summary" />
     <title>SchemaGuard · Turn messy output into validated JSON</title>
     <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
     <link
@@ -17,11 +28,11 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="/static/tokens.css?v=20261011-system" />
-    <link rel="stylesheet" href="/static/style.css?v=20261011-system" />
+    <link rel="stylesheet" href="/static/tokens.css?v=20261011-field-manual" />
+    <link rel="stylesheet" href="/static/style.css?v=20261011-field-manual" />
     <script src="/static/hugeicons.js?v=20261008-icons" defer></script>
-    <script src="/static/components.js?v=20261011-system" defer></script>
-    <script src="/static/app.js?v=20261011-system" defer></script>
+    <script src="/static/components.js?v=20261011-field-manual" defer></script>
+    <script src="/static/app.js?v=20261011-field-manual" defer></script>
   </head>
   <body data-page="landing">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +44,7 @@
           fill="none"
           aria-hidden="true"
         >
-          <rect width="36" height="36" rx="10" fill="currentColor" />
+          <rect width="36" height="36" rx="6" fill="currentColor" />
           <path
             d="M13 10h-2l-2 8 2 8h2m10-16h2l2 8-2 8h-2m-9-8 3 3 6-7"
             stroke="white"
@@ -41,7 +52,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           /></svg
-        >SchemaGuard</a
+        >SchemaGuard<span class="brand-category">JSON integrity</span></a
       >
       <nav aria-label="Main navigation">
         <a class="nav-home" href="/">Home</a>
@@ -52,13 +63,14 @@
     <main id="main" tabindex="-1">
       <section class="hero">
         <div class="hero-copy">
+          <span class="kicker">Structured output / verifiable repairs</span>
           <h1>
             <span>Turn messy LLM output</span>
-            <span>into validated JSON.</span>
+            <span>into <em>validated JSON.</em></span>
           </h1>
           <p>
-            Paste LLM output. Choose a schema. Get validated JSON, with every
-            repair explained.
+            Fix common syntax errors, check a strict schema, and inspect the
+            evidence. No model calls. No guessed values.
           </p>
           <div class="hero-actions">
             <a class="pill" href="/playground"
@@ -73,12 +85,11 @@
         </div>
         <aside class="hero-example" aria-label="Example of a JSON repair">
           <div class="example-heading">
-            <span data-icon="repair" aria-hidden="true"></span>Small fix. Valid
-            JSON.
+            <span data-icon="repair" aria-hidden="true"></span>REPAIR NOTE / 001
           </div>
           <div class="example-code">
             <div class="example-file">
-              <span>LLM output</span
+              <span>01 / Original input</span
               ><span class="example-state">Trailing comma</span>
             </div>
             <pre>
@@ -95,7 +106,7 @@
           </div>
           <div class="example-code example-valid">
             <div class="example-file">
-              <span>Validated output</span
+              <span>02 / Validated output</span
               ><span class="example-state"
                 ><span data-icon="check" aria-hidden="true"></span>Schema
                 passed</span
@@ -114,10 +125,9 @@
       </section>
       <section class="playground-intro" aria-labelledby="playground-heading">
         <div>
-          <h1 id="playground-heading">JSON repair playground.</h1>
-          <p>
-            Check the syntax. Validate the structure. Keep your original values.
-          </p>
+          <span class="kicker">Workspace / JSON validation</span>
+          <h1 id="playground-heading">Inspect before you integrate.</h1>
+          <p>Choose a contract, test your output, and follow every repair.</p>
         </div>
         <a href="/" class="back-home">Back to overview</a>
       </section>
@@ -129,7 +139,7 @@
               data-icon="code"
               aria-hidden="true"
             ></span>
-            <h2>JSON playground</h2>
+            <h2>Validation workspace</h2>
             <span class="workspace-caption"
               >Try it here, or
               <a href="/playground"
@@ -161,10 +171,8 @@
             <select id="schema" hidden aria-hidden="true" tabindex="-1">
               <option value="UserProfile">User profile</option>
               <option value="ProductListing">Product listing</option>
-              <option value="SupportTicket">Support ticket</option></select
-            ><span id="schema-fields" class="schema-fields"
-              >name <span>·</span> age <span>·</span> skills</span
-            >
+              <option value="SupportTicket">Support ticket</option>
+            </select>
           </div>
           <div class="schema-tools">
             <span id="service-state" class="service-state"
@@ -184,7 +192,7 @@
           <p id="schema-hint">Loading schema requirements…</p>
         </div>
         <div class="examples">
-          <span>Start with an example</span>
+          <span>Test case</span>
           <div id="examples"></div>
         </div>
         <div class="editors" id="schema-panel" role="tabpanel">
@@ -196,7 +204,7 @@
                   data-icon="code"
                   aria-hidden="true"
                 ></span
-                ><label for="input">Raw output</label
+                ><label for="input">01 / Raw output</label
                 ><span class="file-extension">input.json</span>
               </div>
               <div class="editor-tools">
@@ -217,7 +225,10 @@
                 id="input"
                 spellcheck="false"
                 wrap="off"
-                aria-describedby="input-help"
+                aria-describedby="input-help notice"
+                aria-invalid="false"
+                autocapitalize="off"
+                autocomplete="off"
                 placeholder="Paste your LLM output here…"
               ></textarea>
             </div>
@@ -234,7 +245,7 @@
                   data-icon="validated"
                   aria-hidden="true"
                 ></span
-                ><span>Validated output</span
+                ><span>02 / Validated output</span
                 ><span class="file-extension">output.json</span>
               </div>
               <button id="copy" class="text-button" disabled>
@@ -353,14 +364,12 @@ Your result will appear here.</pre
       <section class="how">
         <div class="section-heading">
           <div>
-            <span class="kicker">How it works</span>
-            <h2>Predictable by design.<br />Transparent at every step.</h2>
+            <span class="kicker">The repair protocol</span>
+            <h2>A small repair surface.<br />A clear chain of evidence.</h2>
           </div>
           <p>
-            Small, deterministic repairs. Strict schema validation.<br
-              class="desktop"
-            />
-            No invented values. No hidden model calls.
+            Syntax can be repaired. Missing fields and wrong types cannot. Every
+            result makes that boundary visible.
           </p>
         </div>
         <div class="how-grid">
@@ -414,14 +423,15 @@ Your result will appear here.</pre
           <span data-icon="shield" aria-hidden="true"></span>
           <p>
             Your input stays in request memory. It is never stored or written to
-            application logs.<br />This is a deterministic demo. It cannot
-            recover every malformed input.
+            application logs.<br />Repair is limited to fences, single quotes,
+            and trailing commas. Infrastructure may have its own logging policy.
           </p>
         </div>
       </section>
       <section class="developer">
         <div>
-          <h2>One endpoint.<br />A clearer contract.</h2>
+          <span class="kicker">For your pipeline</span>
+          <h2>The same checks.<br />One API request.</h2>
           <p>
             Use the same repair and validation pipeline in an API request. No
             signup or API key required.
@@ -454,6 +464,7 @@ Your result will appear here.</pre
         <nav class="footer-nav" aria-label="Footer">
           <a href="/playground">Playground</a>
           <a href="/docs">API docs</a>
+          <a href="/redoc">API reference</a>
           <a href="/health">Service health</a>
           <a
             href="https://github.com/codealisha99/schemaguard"
@@ -465,7 +476,7 @@ Your result will appear here.</pre
       </div>
       <div class="footer-bottom">
         <p>
-          Built by
+          Maintained by
           <a
             href="https://alishakarma.com"
             rel="noreferrer noopener"
@@ -486,6 +497,7 @@ Your result will appear here.</pre
             target="_blank"
             >X</a
           >
+          <a href="mailto:lishykarma99@gmail.com">Contact</a>
         </nav>
       </div>
     </footer>

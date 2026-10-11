@@ -14,11 +14,12 @@ from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html, get_swagger_ui_oauth2_redirect_html
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
-from app.pages import documentation_page
+from app.pages import documentation_page, not_found_page
 
 MAX_INPUT = 16_384
 MAX_BODY = 65_536
@@ -115,6 +116,15 @@ class GuardMiddleware:
 
 
 app.add_middleware(GuardMiddleware)
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_error(request, exc):
+    # Preserve machine-readable errors for API clients and missing static assets.
+    if (exc.status_code == 404 and "text/html" in request.headers.get("accept", "")
+            and not request.url.path.startswith(("/v1/", "/health", "/static/", "/openapi.json"))):
+        return not_found_page()
+    return JSONResponse({"detail": exc.detail}, status_code=exc.status_code, headers=exc.headers)
 
 
 @app.exception_handler(RequestValidationError)
@@ -342,7 +352,7 @@ def api_reference():
     return documentation_page(get_redoc_html(
         openapi_url=app.openapi_url, title="API reference · SchemaGuard",
         redoc_favicon_url="/static/icon.svg", with_google_fonts=False,
-    ))
+    ), reference=True)
 
 
 @app.get("/docs/oauth2-redirect", include_in_schema=False)
