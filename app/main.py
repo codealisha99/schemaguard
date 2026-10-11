@@ -251,8 +251,8 @@ def database_health():
     if not database_url:
         raise HTTPException(503, "Database is not configured.")
     try:
-        with psycopg.connect(database_url, connect_timeout=5, autocommit=True,
-                             options="-c statement_timeout=3000") as connection:
+        with psycopg.connect(database_url, connect_timeout=5) as connection:
+            connection.execute("SET LOCAL statement_timeout = '3s'")
             connection.execute("SELECT 1").fetchone()
     except psycopg.Error:
         raise HTTPException(503, "Database is unavailable.") from None
