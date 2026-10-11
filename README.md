@@ -98,7 +98,8 @@ Without a trusted proxy configuration, visitors behind the same proxy share its 
 
 ## Production deployment
 
-- Frontend: https://schemaguard-theta.vercel.app
+- Landing page with working inline editor: https://schemaguard-theta.vercel.app
+- Dedicated playground: https://schemaguard-theta.vercel.app/playground
 - API: https://api-production-2476.up.railway.app
 - API docs: https://schemaguard-theta.vercel.app/docs
 - GitHub: https://github.com/codealisha99/schemaguard

@@ -109,3 +109,13 @@ pooler rejects statement timeout as a startup parameter. No submitted JSON is
 persisted; the database probe only sets its timeout and runs `SELECT 1`.
 
 These results supersede earlier statements that production had not been deployed.
+
+## Dedicated playground — 2026-10-11
+
+Added `/playground` on both FastAPI and Vercel, using the shared editor template.
+The landing page retains the fully functional editor and has separate links to
+open the dedicated workspace or try the inline editor. The landing hero includes
+a concrete before/after syntax repair; the workspace has a compact introduction
+and return navigation. Both layouts fit desktop and 390px mobile without
+horizontal overflow. Route assertions and all 41 tests pass (95.79% coverage).
+The production build emits both index.html and playground.html.

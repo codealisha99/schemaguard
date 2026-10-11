@@ -23,6 +23,13 @@ def test_health_and_frontend(client):
     assert client.get('/health').json()['status'] == 'ok'
     page = client.get('/')
     assert 'Turn messy LLM output' in page.text
+    assert 'data-page="landing"' in page.text
+    assert 'href="/playground"' in page.text
+    workspace = client.get('/playground')
+    assert workspace.status_code == 200
+    assert 'data-page="playground"' in workspace.text
+    assert '<title>Playground · SchemaGuard</title>' in workspace.text
+    assert 'id="run"' in workspace.text and 'id="input"' in workspace.text
     assert "script-src 'self';" in page.headers['content-security-policy']
     assert client.get('/static/app.js').status_code == 200
     assert 'https://cdn.jsdelivr.net' in client.get('/docs').headers['content-security-policy']

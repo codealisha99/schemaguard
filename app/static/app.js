@@ -1,4 +1,6 @@
 "use strict";
+const currentNav = document.querySelector(document.body.dataset.page === "playground" ? ".nav-playground" : ".brand");
+currentNav.setAttribute("aria-current", "page");
 const $ = (id) => document.getElementById(id);
 const samples = {
   UserProfile: {
