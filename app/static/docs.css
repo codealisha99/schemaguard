@@ -1,0 +1,107 @@
+.docs-main {
+  padding-block: var(--space-8) var(--space-12);
+}
+.docs-main .swagger-ui {
+  color: var(--ink);
+  font-family: var(--font);
+}
+.docs-main
+  .swagger-ui
+  :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    p,
+    label,
+    button,
+    select,
+    .btn,
+    .title,
+    .opblock-tag,
+    .opblock-summary-description,
+    .response-col_description
+  ) {
+  color: var(--ink);
+  font-family: var(--font);
+}
+.docs-main .swagger-ui .wrapper {
+  padding-inline: 0;
+}
+.docs-main .swagger-ui .info {
+  margin-block: var(--space-4) var(--space-8);
+}
+.docs-main .swagger-ui .info .title {
+  font-size: var(--heading);
+  letter-spacing: -0.035em;
+}
+.docs-main .swagger-ui .opblock {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.docs-main .swagger-ui .opblock.opblock-post {
+  border-color: var(--brand);
+  background: var(--success-bg);
+}
+.docs-main .swagger-ui .opblock.opblock-get {
+  border-color: var(--info);
+  background: var(--info-bg);
+}
+.docs-main .swagger-ui .opblock.opblock-post .opblock-summary-method {
+  background: var(--brand);
+}
+.docs-main .swagger-ui .opblock.opblock-get .opblock-summary-method {
+  background: var(--info);
+}
+.docs-main .swagger-ui .opblock-summary-method,
+.docs-main .swagger-ui .btn.execute {
+  color: var(--page);
+}
+.docs-main .swagger-ui .btn.execute {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.docs-main .swagger-ui :is(code, pre, .microlight, .opblock-summary-path) {
+  font-family: var(--mono);
+}
+.docs-main .swagger-ui .opblock-summary-control {
+  min-height: 52px;
+}
+.docs-main .swagger-ui .opblock-summary-control:hover {
+  background: transparent;
+}
+.docs-main .swagger-ui .info a {
+  color: var(--brand);
+}
+.docs-main redoc :is(h1, h2, h3, h4, p, label, button) {
+  font-family: var(--font);
+}
+.docs-main redoc :is(h1, h2, h4) {
+  color: var(--ink);
+}
+.docs-main redoc :is(code, pre) {
+  font-family: var(--mono);
+}
+@media (max-width: 650px) {
+  .docs-main {
+    padding-top: var(--space-5);
+  }
+  .docs-main .swagger-ui .opblock-summary {
+    flex-wrap: wrap;
+  }
+  .docs-main .swagger-ui .opblock-summary-path {
+    font-size: var(--text-sm);
+  }
+  .docs-main .swagger-ui .opblock-summary-description {
+    font-size: var(--text-xs);
+  }
+}
+
+.docs-main .swagger-ui .info .version {
+  background: var(--brand);
+  color: var(--page);
+}
+.docs-main .swagger-ui .info .version-stamp .version {
+  background: var(--success);
+}

@@ -14,9 +14,11 @@ from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html, get_swagger_ui_oauth2_redirect_html
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from app.pages import documentation_page
 
 MAX_INPUT = 16_384
 MAX_BODY = 65_536
@@ -51,7 +53,7 @@ class SupportTicket(DemoModel):
 
 
 SCHEMAS = {m.__name__: m for m in (UserProfile, ProductListing, SupportTicket)}
-app = FastAPI(title="SchemaGuard", version="2.0.0", description="Deterministic JSON repair and strict schema validation. No LLM calls.")
+app = FastAPI(title="SchemaGuard", version="2.0.0", description="Deterministic JSON repair and strict schema validation. No LLM calls.", docs_url=None, redoc_url=None)
 
 
 class GuardMiddleware:
@@ -323,6 +325,29 @@ def validate(body: ValidateIn):
 
 STATIC = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+
+
+@app.get("/docs", include_in_schema=False)
+def api_docs():
+    return documentation_page(get_swagger_ui_html(
+        openapi_url=app.openapi_url, title="API docs · SchemaGuard",
+        swagger_favicon_url="/static/icon.svg",
+        oauth2_redirect_url="/docs/oauth2-redirect",
+        swagger_ui_parameters={"defaultModelsExpandDepth": -1, "displayRequestDuration": True, "deepLinking": False},
+    ))
+
+
+@app.get("/redoc", include_in_schema=False)
+def api_reference():
+    return documentation_page(get_redoc_html(
+        openapi_url=app.openapi_url, title="API reference · SchemaGuard",
+        redoc_favicon_url="/static/icon.svg", with_google_fonts=False,
+    ))
+
+
+@app.get("/docs/oauth2-redirect", include_in_schema=False)
+def docs_oauth_redirect():
+    return get_swagger_ui_oauth2_redirect_html()
 
 
 @app.get("/", include_in_schema=False)

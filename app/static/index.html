@@ -17,12 +17,14 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="/static/style.css?v=20261011-routes" />
+    <link rel="stylesheet" href="/static/tokens.css?v=20261011-system" />
+    <link rel="stylesheet" href="/static/style.css?v=20261011-system" />
     <script src="/static/hugeicons.js?v=20261008-icons" defer></script>
-    <script src="/static/components.js?v=20261008-icons" defer></script>
-    <script src="/static/app.js?v=20261008-icons" defer></script>
+    <script src="/static/components.js?v=20261011-system" defer></script>
+    <script src="/static/app.js?v=20261011-system" defer></script>
   </head>
   <body data-page="landing">
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="nav">
       <a class="brand" href="/" aria-label="SchemaGuard home"
         ><svg
@@ -47,59 +49,94 @@
         ><a href="/docs" class="nav-docs">API docs</a>
       </nav>
     </header>
-    <main>
+    <main id="main" tabindex="-1">
       <section class="hero">
         <div class="hero-copy">
-        <h1>
-          <span>Turn messy LLM output</span>
-          <span>into validated JSON.</span>
-        </h1>
-        <p>
-          Paste LLM output. Choose a schema. Get validated JSON, with every
-          repair explained.
-        </p>
-        <div class="hero-actions">
-          <a class="pill" href="/playground"
-            >Open the playground <span data-icon="arrow" aria-hidden="true"></span></a
-          ><a class="pill pill-quiet" href="#playground">Try it below</a>
-        </div>
-        <div class="hero-proof">
-          <span>No API key</span><span>Deterministic repairs</span
-          ><span>Nothing stored</span>
-        </div>
+          <h1>
+            <span>Turn messy LLM output</span>
+            <span>into validated JSON.</span>
+          </h1>
+          <p>
+            Paste LLM output. Choose a schema. Get validated JSON, with every
+            repair explained.
+          </p>
+          <div class="hero-actions">
+            <a class="pill" href="/playground"
+              >Open the playground
+              <span data-icon="arrow" aria-hidden="true"></span></a
+            ><a class="pill pill-quiet" href="#playground">Try it below</a>
+          </div>
+          <div class="hero-proof">
+            <span>No API key</span><span>Deterministic repairs</span
+            ><span>Nothing stored</span>
+          </div>
         </div>
         <aside class="hero-example" aria-label="Example of a JSON repair">
-          <div class="example-heading"><span data-icon="repair" aria-hidden="true"></span>Small fix. Valid JSON.</div>
+          <div class="example-heading">
+            <span data-icon="repair" aria-hidden="true"></span>Small fix. Valid
+            JSON.
+          </div>
           <div class="example-code">
-            <div class="example-file"><span>LLM output</span><span class="example-state">Trailing comma</span></div>
-            <pre>{
+            <div class="example-file">
+              <span>LLM output</span
+              ><span class="example-state">Trailing comma</span>
+            </div>
+            <pre>
+{
   "name": "Alisha",
   "age": 30,
   "skills": ["Python"]<mark>,</mark>
-}</pre>
+}</pre
+            >
           </div>
-          <div class="example-transition"><span data-icon="arrow" aria-hidden="true"></span><span>Remove the comma. Check the schema.</span></div>
+          <div class="example-transition">
+            <span data-icon="arrow" aria-hidden="true"></span
+            ><span>Remove the comma. Check the schema.</span>
+          </div>
           <div class="example-code example-valid">
-            <div class="example-file"><span>Validated output</span><span class="example-state"><span data-icon="check" aria-hidden="true"></span>Schema passed</span></div>
-            <pre>{
+            <div class="example-file">
+              <span>Validated output</span
+              ><span class="example-state"
+                ><span data-icon="check" aria-hidden="true"></span>Schema
+                passed</span
+              >
+            </div>
+            <pre>
+{
   "name": "Alisha",
   "age": 30,
   "skills": ["Python"]
-}</pre>
+}</pre
+            >
           </div>
           <p>Your values stay yours. Only the syntax changes.</p>
         </aside>
       </section>
       <section class="playground-intro" aria-labelledby="playground-heading">
-        <div><h1 id="playground-heading">A place for almost JSON.</h1><p>Paste your output, choose a schema, and see exactly what changes.</p></div>
+        <div>
+          <h1 id="playground-heading">JSON repair playground.</h1>
+          <p>
+            Check the syntax. Validate the structure. Keep your original values.
+          </p>
+        </div>
         <a href="/" class="back-home">Back to overview</a>
       </section>
       <section class="playground" id="playground" aria-label="JSON playground">
         <div class="workspace-title">
           <div>
-            <span class="workspace-symbol" data-icon="code" aria-hidden="true"></span>
+            <span
+              class="workspace-symbol"
+              data-icon="code"
+              aria-hidden="true"
+            ></span>
             <h2>JSON playground</h2>
-            <span class="workspace-caption">Try it here, or <a href="/playground">open the full playground <span data-icon="external" aria-hidden="true"></span></a>.</span>
+            <span class="workspace-caption"
+              >Try it here, or
+              <a href="/playground"
+                >open the full playground
+                <span data-icon="external" aria-hidden="true"></span></a
+              >.</span
+            >
           </div>
           <div class="workspace-run">
             <span class="shortcut"><kbd>⌘</kbd><kbd>↵</kbd></span
@@ -108,7 +145,8 @@
               id="run"
               aria-label="Repair &amp; validate"
             >
-              Repair &amp; validate <span data-icon="arrow" aria-hidden="true"></span>
+              Repair &amp; validate
+              <span data-icon="arrow" aria-hidden="true"></span>
             </button>
           </div>
         </div>
@@ -133,7 +171,9 @@
               ><span class="signal"></span> Checking service</span
             >
             <details class="schema-details">
-              <summary>View schema <span data-icon="code" aria-hidden="true"></span></summary>
+              <summary>
+                View schema <span data-icon="code" aria-hidden="true"></span>
+              </summary>
               <pre id="schema-view">Loading schema…</pre>
             </details>
           </div>
@@ -151,12 +191,17 @@
           <div class="input-panel">
             <div class="panel-head">
               <div class="file-label">
-                <span class="file-icon" data-icon="code" aria-hidden="true"></span
+                <span
+                  class="file-icon"
+                  data-icon="code"
+                  aria-hidden="true"
+                ></span
                 ><label for="input">Raw output</label
                 ><span class="file-extension">input.json</span>
               </div>
               <div class="editor-tools">
-                <button id="clear-input" class="text-button"><span data-icon="clear"></span>Clear</button
+                <button id="clear-input" class="text-button">
+                  <span data-icon="clear"></span>Clear</button
                 ><button
                   id="format"
                   class="text-button"
@@ -184,15 +229,26 @@
           <div class="output-panel" data-state="neutral">
             <div class="panel-head">
               <div class="file-label">
-                <span class="file-icon" data-icon="validated" aria-hidden="true"></span
+                <span
+                  class="file-icon"
+                  data-icon="validated"
+                  aria-hidden="true"
+                ></span
                 ><span>Validated output</span
                 ><span class="file-extension">output.json</span>
               </div>
-              <button id="copy" class="text-button" disabled><span data-icon="copy"></span>Copy JSON</button>
+              <button id="copy" class="text-button" disabled>
+                <span data-icon="copy"></span>Copy JSON
+              </button>
             </div>
             <div class="output-body">
               <div class="result-summary">
-                <div id="result-status" class="status neutral">
+                <div
+                  id="result-status"
+                  class="status neutral"
+                  role="status"
+                  aria-live="polite"
+                >
                   Ready to validate
                 </div>
                 <span id="duration"></span>
@@ -203,11 +259,17 @@
               </p>
               <div id="output-empty" class="output-empty" aria-hidden="true">
                 <span>{<span>✓</span>}</span
-                ><strong>Make room for certainty.</strong>
-                <p>Your validated JSON will appear here.</p>
+                ><strong>Ready when you are.</strong>
+                <p>Run an example or paste your own output.</p>
               </div>
-              <pre id="output" tabindex="0" aria-label="Validated JSON output">
-Your result will appear here.</pre>
+              <pre
+                id="output"
+                tabindex="0"
+                aria-label="Validated JSON output"
+                role="region"
+              >
+Your result will appear here.</pre
+              >
             </div>
             <div class="editor-foot">
               <span id="result-meta"
@@ -218,7 +280,9 @@ Your result will appear here.</pre>
         </div>
         <div class="actions">
           <div>
-            <button id="reset" class="reset-button">↺ Reset playground</button
+            <button id="reset" class="reset-button">
+              <span data-icon="fallback" aria-hidden="true"></span>Reset
+              playground</button
             ><button
               id="expand-editors"
               class="reset-button"
@@ -265,7 +329,11 @@ Your result will appear here.</pre>
           </div>
           <div class="timeline-heading">
             <div>
-              <span class="trace-icon" data-icon="timeline" aria-hidden="true"></span>
+              <span
+                class="trace-icon"
+                data-icon="timeline"
+                aria-hidden="true"
+              ></span>
               <h3>Repair timeline</h3>
             </div>
             <span id="attempts">Every attempt, accounted for</span>
@@ -298,7 +366,11 @@ Your result will appear here.</pre>
         <div class="how-grid">
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
-              <div class="process-icon" data-icon="code" aria-hidden="true"></div>
+              <div
+                class="process-icon"
+                data-icon="code"
+                aria-hidden="true"
+              ></div>
               <span class="number">01. Parse</span>
               <h3>Start with the original.</h3>
               <p>
@@ -309,7 +381,11 @@ Your result will appear here.</pre>
           >
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
-              <div class="process-icon" data-icon="repair" aria-hidden="true"></div>
+              <div
+                class="process-icon"
+                data-icon="repair"
+                aria-hidden="true"
+              ></div>
               <span class="number">02. Repair</span>
               <h3>Fix syntax, keep meaning.</h3>
               <p>
@@ -320,7 +396,11 @@ Your result will appear here.</pre>
           >
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
-              <div class="process-icon" data-icon="check" aria-hidden="true"></div>
+              <div
+                class="process-icon"
+                data-icon="check"
+                aria-hidden="true"
+              ></div>
               <span class="number">03. Validate</span>
               <h3>Get an answer you can inspect.</h3>
               <p>
@@ -347,13 +427,16 @@ Your result will appear here.</pre>
             signup or API key required.
           </p>
           <a href="/docs" class="developer-link"
-            >Explore the API docs <span data-icon="external" aria-hidden="true"></span></a
-          >
+            >Explore the API docs
+            <span data-icon="external" aria-hidden="true"></span
+          ></a>
         </div>
         <div class="request">
           <div class="panel-head">
             <span><span class="http-method">POST</span> /v1/validate</span
-            ><button id="copy-request" class="text-button"><span data-icon="copy"></span>Copy request</button>
+            ><button id="copy-request" class="text-button">
+              <span data-icon="copy"></span>Copy request
+            </button>
           </div>
           <pre id="api-request"></pre>
           <div class="request-foot">
@@ -390,6 +473,20 @@ Your result will appear here.</pre>
             >Alisha Karma</a
           >
         </p>
+        <nav class="creator-links" aria-label="Alisha Karma links">
+          <a
+            href="https://github.com/codealisha99"
+            rel="noreferrer noopener"
+            target="_blank"
+            >GitHub profile</a
+          >
+          <a
+            href="https://x.com/karmalisha"
+            rel="noreferrer noopener"
+            target="_blank"
+            >X</a
+          >
+        </nav>
       </div>
     </footer>
   </body>

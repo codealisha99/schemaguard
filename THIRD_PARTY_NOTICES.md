@@ -7,7 +7,7 @@ The following Aceternity UI components by Manu Arora / Aceternity were reviewed 
 - [Card Hover Effect](https://ui.aceternity.com/components/card-hover-effect), [original registry source](https://ui.aceternity.com/registry/card-hover-effect.json): shared background moves between explanation cards. Keyboard focus receives the same treatment; mobile uses static cards.
 - [Grid and Dot Backgrounds](https://ui.aceternity.com/components/grid-and-dot-backgrounds): a CSS dot pattern with a radial mask, adapted to the light hero palette.
 
-These are lightweight DOM/CSS adaptations, not installed React components. They live in `app/static/components.js` and the Aceternity section of `app/static/style.css`. React, Tailwind, Motion, and a Node build step are not required. Original component sources are referenced rather than redistributed as a component library. Aceternity retains ownership of its original work; see its [license terms](https://ui.aceternity.com/licence).
+These are lightweight DOM/CSS adaptations, not installed React components. The stateful button and keyboard-accessible tabs live in `app/static/components.js`; their presentation uses the shared design tokens. The previously adapted card hover effect and dot background are no longer rendered. The references above retain their attribution history. React, Tailwind, and Motion are not dependencies; the static production build uses Node. Original component sources are referenced rather than redistributed as a component library. Aceternity retains ownership of its original work; see its [license terms](https://ui.aceternity.com/licence).
 
 Manrope and JetBrains Mono are locally hosted fonts under the SIL Open Font License. Their notices are in `app/static/fonts/`.
 
