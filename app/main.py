@@ -14,7 +14,7 @@ from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
@@ -326,5 +326,12 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
 @app.get("/", include_in_schema=False)
-def playground():
+def landing():
     return FileResponse(STATIC / "index.html")
+
+
+@app.get("/playground", include_in_schema=False)
+def playground():
+    page = (STATIC / "index.html").read_text()
+    return HTMLResponse(page.replace('data-page="landing"', 'data-page="playground"')
+                        .replace("SchemaGuard · Turn messy output into validated JSON", "Playground · SchemaGuard"))

@@ -8,7 +8,7 @@
       content="Turn messy LLM output into validated JSON. Deterministic repairs, strict schemas, and a transparent repair trace."
     />
     <meta name="theme-color" content="#ffffff" />
-    <title>SchemaGuard · JSON repair playground</title>
+    <title>SchemaGuard · Turn messy output into validated JSON</title>
     <link rel="icon" href="/static/icon.svg" type="image/svg+xml" />
     <link
       rel="preload"
@@ -17,12 +17,12 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="/static/style.css?v=20261008-icons" />
+    <link rel="stylesheet" href="/static/style.css?v=20261011-routes" />
     <script src="/static/hugeicons.js?v=20261008-icons" defer></script>
     <script src="/static/components.js?v=20261008-icons" defer></script>
     <script src="/static/app.js?v=20261008-icons" defer></script>
   </head>
-  <body>
+  <body data-page="landing">
     <header class="nav">
       <a class="brand" href="/" aria-label="SchemaGuard home"
         ><svg
@@ -42,12 +42,14 @@
         >SchemaGuard</a
       >
       <nav aria-label="Main navigation">
-        <a class="nav-playground" href="#playground">Playground</a
+        <a class="nav-home" href="/">Home</a>
+        <a class="nav-playground" href="/playground">Playground</a
         ><a href="/docs" class="nav-docs">API docs</a>
       </nav>
     </header>
     <main>
       <section class="hero">
+        <div class="hero-copy">
         <h1>
           <span>Turn messy LLM output</span>
           <span>into validated JSON.</span>
@@ -57,23 +59,47 @@
           repair explained.
         </p>
         <div class="hero-actions">
-          <a class="pill" href="#playground"
+          <a class="pill" href="/playground"
             >Open the playground <span data-icon="arrow" aria-hidden="true"></span></a
-          ><a class="pill pill-quiet" href="/docs">API docs</a>
+          ><a class="pill pill-quiet" href="#playground">Try it below</a>
         </div>
         <div class="hero-proof">
           <span>No API key</span><span>Deterministic repairs</span
           ><span>Nothing stored</span>
         </div>
+        </div>
+        <aside class="hero-example" aria-label="Example of a JSON repair">
+          <div class="example-heading"><span data-icon="repair" aria-hidden="true"></span>Small fix. Valid JSON.</div>
+          <div class="example-code">
+            <div class="example-file"><span>LLM output</span><span class="example-state">Trailing comma</span></div>
+            <pre>{
+  "name": "Alisha",
+  "age": 30,
+  "skills": ["Python"]<mark>,</mark>
+}</pre>
+          </div>
+          <div class="example-transition"><span data-icon="arrow" aria-hidden="true"></span><span>Remove the comma. Check the schema.</span></div>
+          <div class="example-code example-valid">
+            <div class="example-file"><span>Validated output</span><span class="example-state"><span data-icon="check" aria-hidden="true"></span>Schema passed</span></div>
+            <pre>{
+  "name": "Alisha",
+  "age": 30,
+  "skills": ["Python"]
+}</pre>
+          </div>
+          <p>Your values stay yours. Only the syntax changes.</p>
+        </aside>
+      </section>
+      <section class="playground-intro" aria-labelledby="playground-heading">
+        <div><h1 id="playground-heading">A place for almost JSON.</h1><p>Paste your output, choose a schema, and see exactly what changes.</p></div>
+        <a href="/" class="back-home">Back to overview</a>
       </section>
       <section class="playground" id="playground" aria-label="JSON playground">
         <div class="workspace-title">
           <div>
             <span class="workspace-symbol" data-icon="code" aria-hidden="true"></span>
             <h2>JSON playground</h2>
-            <span class="workspace-caption"
-              >A little structure goes a long way.</span
-            >
+            <span class="workspace-caption">Try it here, or <a href="/playground">open the full playground <span data-icon="external" aria-hidden="true"></span></a>.</span>
           </div>
           <div class="workspace-run">
             <span class="shortcut"><kbd>⌘</kbd><kbd>↵</kbd></span
@@ -343,11 +369,11 @@ Your result will appear here.</pre>
           <p>Deterministic JSON repair. Nothing stored.</p>
         </div>
         <nav class="footer-nav" aria-label="Footer">
-          <a href="#playground">Playground</a>
+          <a href="/playground">Playground</a>
           <a href="/docs">API docs</a>
           <a href="/health">Service health</a>
           <a
-            href="https://github.com/codealisha99"
+            href="https://github.com/codealisha99/schemaguard"
             rel="noreferrer noopener"
             target="_blank"
             >GitHub</a

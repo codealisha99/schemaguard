@@ -4,6 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/playground", "destination": "/playground.html" },
     { "source": "/v1/:path*", "destination": "https://api-production-2476.up.railway.app/v1/:path*" },
     { "source": "/health", "destination": "https://api-production-2476.up.railway.app/health" },
     { "source": "/health/:path*", "destination": "https://api-production-2476.up.railway.app/health/:path*" },
@@ -21,7 +22,7 @@
       ]
     },
     {
-      "source": "/",
+      "source": "/(playground)?",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache" },
         { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'" }
