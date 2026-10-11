@@ -6,7 +6,7 @@ currentNav.setAttribute("aria-current", "page");
 const $ = (id) => document.getElementById(id);
 const samples = {
   UserProfile: {
-    name: "Alisha Chen",
+    name: "Sample user",
     age: 30,
     skills: ["Python", "TypeScript"],
   },
@@ -57,7 +57,8 @@ function example(kind) {
 }
 function count() {
   const raw = $("input").value;
-  $("count").textContent = `${raw.length.toLocaleString("en-US")} / 16,384`;
+  $("count").textContent =
+    `${Array.from(raw).length.toLocaleString("en-US")} / 16,384`;
   const lines = Math.min(raw.split("\n").length, 4096);
   $("line-numbers").textContent = Array.from(
     { length: lines },
@@ -120,6 +121,7 @@ function clearResult() {
   );
   $("attempts").textContent = "Every attempt, accounted for";
   $("notice").textContent = "";
+  $("input").setAttribute("aria-invalid", "false");
 }
 function addStep(title, description, outcome, symbol) {
   const li = document.createElement("li");
@@ -245,9 +247,6 @@ function updateSchema() {
     ? pretty(definitions[$("schema").value])
     : "Schema definitions unavailable. Open /docs for API details.";
   $("fallback-view").textContent = pretty(samples[$("schema").value]);
-  $("schema-fields").textContent = Object.keys(samples[$("schema").value]).join(
-    " · ",
-  );
   renderContract();
   loadExample("fences");
 }
@@ -292,8 +291,7 @@ $("format").addEventListener("click", async () => {
           : "Formatting requires unambiguous, valid JSON. Run repair & validate for malformed input.",
       );
     $("input").value = (await response.json()).formatted;
-    count();
-    clearResult();
+    $("input").dispatchEvent(new Event("input"));
     $("notice").textContent =
       "Input formatted. Run validation to check the schema.";
   } catch (error) {
@@ -356,12 +354,15 @@ $("run").addEventListener("click", async () => {
   clearResult();
   if (!$("input").value.trim()) {
     $("notice").textContent = "Paste JSON or choose an example to begin.";
+    $("input").setAttribute("aria-invalid", "true");
     $("input").focus();
     return;
   }
-  if ($("input").value.length > 16384) {
+  if (Array.from($("input").value).length > 16384) {
     $("notice").textContent =
       "Input exceeds 16,384 characters. Shorten it and try again.";
+    $("input").setAttribute("aria-invalid", "true");
+    $("input").focus();
     return;
   }
   let outcome = "idle";
@@ -397,6 +398,10 @@ $("run").addEventListener("click", async () => {
       );
     const result = await response.json();
     outcome = result.status;
+    $("input").setAttribute(
+      "aria-invalid",
+      String(["failure", "fallback"].includes(result.status)),
+    );
     showOutcome(result);
     const messages = {
       valid: [

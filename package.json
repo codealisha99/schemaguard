@@ -1,6 +1,17 @@
 {
-  "name": "@ai-infra/schemaguard",
+  "name": "@codealisha99/schemaguard",
   "private": true,
+  "description": "Deterministic JSON syntax repair and strict schema validation.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codealisha99/schemaguard.git"
+  },
+  "maintainers": [
+    {
+      "name": "Alisha Karma",
+      "url": "https://github.com/codealisha99"
+    }
+  ],
   "scripts": {
     "build": "node scripts/build-frontend.mjs",
     "test:unit": "pytest -q",

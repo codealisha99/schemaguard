@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 for (const file of [
   "app/static/app.js",
   "app/static/components.js",
+  "app/static/docs-theme.js",
   "app/static/hugeicons.js",
   "scripts/build-frontend.mjs",
 ]) {
@@ -47,11 +48,11 @@ const textPairs = [
   ["muted", "surface"],
   ["brand", "page"],
   ["brand", "selected"],
-  ["page", "brand"],
-  ["page", "brand-hover"],
-  ["page", "success"],
-  ["page", "warning"],
-  ["page", "error"],
+  ["on-brand", "brand"],
+  ["on-brand", "brand-hover"],
+  ["on-brand", "success"],
+  ["on-brand", "warning"],
+  ["on-brand", "error"],
   ["success", "success-bg"],
   ["warning", "warning-bg"],
   ["error", "error-bg"],
@@ -74,6 +75,8 @@ for (const pair of [
   ["border-strong", "page"],
   ["focus", "page"],
   ["code-key", "code"],
+  ["code-focus", "code"],
+  ["code-focus", "code-surface"],
 ]) {
   assert(contrast(...pair) >= 3, `${pair.join("/")} fails non-text contrast`);
 }
@@ -81,6 +84,7 @@ for (const pair of [
 for (const [file, page] of [
   ["dist/index.html", "landing"],
   ["dist/playground.html", "playground"],
+  ["dist/404.html", "error"],
 ]) {
   const html = await readFile(file, "utf8");
   assert(html.includes(`data-page="${page}"`));
@@ -100,5 +104,5 @@ for (const [file, page] of [
 }
 const minimum = Math.min(...textPairs.map((pair) => contrast(...pair)));
 console.log(
-  `Frontend checks passed: JavaScript syntax, both build outputs, assets, ARIA references, and ${textPairs.length} text contrast pairs (minimum ${minimum.toFixed(2)}:1).`,
+  `Frontend checks passed: JavaScript syntax, three build outputs, assets, ARIA references, and ${textPairs.length} text contrast pairs (minimum ${minimum.toFixed(2)}:1).`,
 );

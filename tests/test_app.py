@@ -215,3 +215,28 @@ def test_formatting_safe_and_schema_independent(client):
         assert client.post('/v1/format', json={'raw_output':raw}).status_code == 422
     errors = post(client, '{"name":"x","age":30,"skills":[2]}').json()['validation_errors']
     assert errors[0]['expected']['type'] == 'string'
+
+
+def test_browser_not_found_preserves_api_errors(client):
+    page = client.get('/missing-page', headers={'accept': 'text/html'})
+    assert page.status_code == 404
+    assert 'This path has no contract.' in page.text
+    assert 'Maintained by' in page.text and 'Alisha Karma' in page.text
+    assert 'href="/playground"' in page.text
+    assert client.get('/missing-page').json() == {'detail': 'Not Found'}
+    assert client.get('/v1/missing', headers={'accept': 'text/html'}).json() == {'detail': 'Not Found'}
+    assert client.get('/static/missing.svg', headers={'accept': 'text/html'}).status_code == 404
+    unknown = post(client, schema_name='Unknown')
+    assert unknown.status_code == 404 and unknown.headers['content-type'].startswith('application/json')
+
+
+def test_documentation_views_have_shared_navigation(client):
+    for route in ('/docs', '/redoc'):
+        page = client.get(route)
+        assert page.status_code == 200
+        assert 'Documentation views' in page.text
+        assert 'href="/openapi.json"' in page.text
+        assert 'No API key required.' in page.text
+        assert 'Maintained by' in page.text
+    assert 'href="/redoc" aria-current="page"' in client.get('/redoc').text
+    assert 'href="/docs" aria-current="page"' in client.get('/docs').text
