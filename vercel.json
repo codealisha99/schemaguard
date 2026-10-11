@@ -5,8 +5,8 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/v1/:path*", "destination": "https://api-production-2476.up.railway.app/v1/:path*" },
-    { "source": "/health/:path*", "destination": "https://api-production-2476.up.railway.app/health/:path*" },
     { "source": "/health", "destination": "https://api-production-2476.up.railway.app/health" },
+    { "source": "/health/:path*", "destination": "https://api-production-2476.up.railway.app/health/:path*" },
     { "source": "/docs", "destination": "https://api-production-2476.up.railway.app/docs" },
     { "source": "/redoc", "destination": "https://api-production-2476.up.railway.app/redoc" },
     { "source": "/openapi.json", "destination": "https://api-production-2476.up.railway.app/openapi.json" }
