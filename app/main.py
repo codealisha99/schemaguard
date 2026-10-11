@@ -6,6 +6,7 @@ import math
 import os
 import re
 import time
+import psycopg
 from collections import deque
 from pathlib import Path
 from threading import Lock
@@ -241,6 +242,21 @@ def format_json(body: FormatIn):
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "schemaguard"}
+
+
+@app.get("/health/database")
+def database_health():
+    """Explicit connectivity probe; never stores submitted playground content."""
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise HTTPException(503, "Database is not configured.")
+    try:
+        with psycopg.connect(database_url, connect_timeout=5, autocommit=True,
+                             options="-c statement_timeout=3000") as connection:
+            connection.execute("SELECT 1").fetchone()
+    except psycopg.Error:
+        raise HTTPException(503, "Database is unavailable.") from None
+    return {"status": "ok", "database": "connected"}
 
 
 @app.get("/v1/schemas")

@@ -8,3 +8,7 @@ htmlcov/
 .env.*
 !.env.example
 .railway/
+.vercel/
+.neon
+dist/
+node_modules/

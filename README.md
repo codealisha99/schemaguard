@@ -88,6 +88,7 @@ No required user-provided variables or secrets.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
+| `DATABASE_URL` | unset | Optional pooled Neon Postgres URL, used only by `/health/database`. |
 | `PORT` | `8006` | HTTP port; Railway injects this automatically. |
 | `RATE_LIMIT_PER_MINUTE` | `60` | Requests per peer IP per rolling minute. Use a positive integer. |
 | `RATE_LIMIT_GLOBAL_PER_MINUTE` | `180` | Requests per instance per rolling minute. Use a positive integer. |
@@ -95,28 +96,39 @@ No required user-provided variables or secrets.
 
 Without a trusted proxy configuration, visitors behind the same proxy share its per-IP allowance. Arbitrary forwarded headers are ignored. Configure `TRUSTED_PROXY_IPS` only with verified infrastructure addresses; do not set `*` on an app that can receive direct untrusted traffic. The global limit applies regardless of forwarded headers. `LLM_PROVIDER` is unused and unnecessary.
 
-## Railway deployment from the monorepo
+## Production deployment
 
-1. Publish the monorepo to a GitHub repository if it is not already hosted. This workspace has no `.git` repository; do not initialize or push unrelated projects just to deploy this service.
-2. In Railway, create a project/service from that repository and select the intended branch.
-3. In service **Settings → Source**, set **Root Directory** to `/06-schemaguard`.
-4. Set **Railway Config File** to `/06-schemaguard/railway.json`. This path is relative to the repository root, not the service root. The config selects the Dockerfile and `/health` health check. Keep the default Docker start command; no override is needed.
-5. Keep one replica. No database, secrets, or model keys are required. Railway supplies `PORT`; optional variables are listed above. Initially the safe proxy default may pool visitors into a shared IP allowance; the separate global cap still applies.
-6. Deploy. Confirm the deployment passes `/health`, then choose **Settings → Networking → Generate Domain**. Use its HTTPS URL.
-7. Verify the public deployment, replacing the example hostname:
+- Frontend: https://schemaguard-theta.vercel.app
+- API: https://api-production-2476.up.railway.app
+- API docs: https://schemaguard-theta.vercel.app/docs
+- GitHub: https://github.com/codealisha99/schemaguard
+- Railway project: `schemaguard`, production service `api`, one worker/replica.
+- Vercel project: `codealisha99-9119/schemaguard`.
+- Neon project: `schemaguard` (`small-lake-24728324`), Singapore, Postgres 17.
+
+Vercel builds the static frontend with `npm run build`. `vercel.json` forwards
+`/v1/*`, health, and documentation requests to Railway, keeping browser requests
+on the same origin. Railway builds the root Dockerfile and checks `/health`.
+Both projects connect to this repository's `main` branch for automatic deployment.
+
+`DATABASE_URL` is a secret Railway variable containing the pooled Neon connection
+string. It is never included in the frontend or committed. The optional
+`GET /health/database` probe executes only `SELECT 1`, returning 503 if the
+connection is missing or unavailable. `/health` remains independent of Neon;
+JSON validation remains stateless and stores no submitted content. Database
+checks are explicit rather than part of recurring health checks.
+
+To deploy manually from this repository:
 
 ```bash
-curl --fail https://YOUR-DOMAIN.up.railway.app/health
-curl --fail https://YOUR-DOMAIN.up.railway.app/v1/schemas
-curl --fail https://YOUR-DOMAIN.up.railway.app/v1/validate \
-  -H 'Content-Type: application/json' \
-  -d '{"raw_output":"{\"name\":\"Alisha\",\"age\":30,\"skills\":[\"Python\"],}"}'
+railway up --service api
+vercel deploy --prod
 ```
 
-The last response must show `status: "repaired"`, the validated object, and a `commas` repair step. Open the HTTPS page on desktop/mobile and run schema mismatch both with and without fallback before sharing it.
+To verify:
 
-For an already-created Railway service, `railway login`, `railway link`, then `railway up` from this directory can upload just this application. Link the intended new service explicitly; do not reuse another project's service. Configure `/health` and generate a domain as above.
-
-Official reference: [monorepo roots and config paths](https://docs.railway.com/deployments/monorepo), [Dockerfile builds](https://docs.railway.com/builds/dockerfiles), [PORT and health checks](https://docs.railway.com/deployments/healthchecks).
-
-No public deployment has been verified in this workspace: the saved Railway login is expired and no project is linked. Local verification results are recorded in `VERIFICATION.md`.
+```bash
+curl --fail https://schemaguard-theta.vercel.app/health
+curl --fail https://schemaguard-theta.vercel.app/health/database
+curl --fail https://schemaguard-theta.vercel.app/v1/schemas
+```

@@ -17,9 +17,10 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="/static/style.css" />
-    <script src="/static/components.js" defer></script>
-    <script src="/static/app.js" defer></script>
+    <link rel="stylesheet" href="/static/style.css?v=20261008-icons" />
+    <script src="/static/hugeicons.js?v=20261008-icons" defer></script>
+    <script src="/static/components.js?v=20261008-icons" defer></script>
+    <script src="/static/app.js?v=20261008-icons" defer></script>
   </head>
   <body>
     <header class="nav">
@@ -51,17 +52,24 @@
           <span>Turn messy LLM output</span>
           <span>into validated JSON.</span>
         </h1>
+        <p>
+          Paste LLM output. Choose a schema. Get validated JSON, with every
+          repair explained.
+        </p>
         <div class="hero-actions">
           <a class="pill" href="#playground"
-            >Open the playground <span aria-hidden="true">→</span></a
+            >Open the playground <span data-icon="arrow" aria-hidden="true"></span></a
           ><a class="pill pill-quiet" href="/docs">API docs</a>
         </div>
-        <p>Repair the syntax, check the schema, and show every step.</p>
+        <div class="hero-proof">
+          <span>No API key</span><span>Deterministic repairs</span
+          ><span>Nothing stored</span>
+        </div>
       </section>
       <section class="playground" id="playground" aria-label="JSON playground">
         <div class="workspace-title">
           <div>
-            <span class="workspace-symbol" aria-hidden="true">{ }</span>
+            <span class="workspace-symbol" data-icon="code" aria-hidden="true"></span>
             <h2>JSON playground</h2>
             <span class="workspace-caption"
               >A little structure goes a long way.</span
@@ -74,7 +82,7 @@
               id="run"
               aria-label="Repair &amp; validate"
             >
-              Repair &amp; validate <span aria-hidden="true">→</span>
+              Repair &amp; validate <span data-icon="arrow" aria-hidden="true"></span>
             </button>
           </div>
         </div>
@@ -99,10 +107,15 @@
               ><span class="signal"></span> Checking service</span
             >
             <details class="schema-details">
-              <summary>View schema <span aria-hidden="true">{ }</span></summary>
+              <summary>View schema <span data-icon="code" aria-hidden="true"></span></summary>
               <pre id="schema-view">Loading schema…</pre>
             </details>
           </div>
+        </div>
+        <div class="schema-contract" id="schema-contract" aria-live="polite">
+          <span>Required fields</span>
+          <ul id="contract-fields" aria-label="Required schema fields"></ul>
+          <p id="schema-hint">Loading schema requirements…</p>
         </div>
         <div class="examples">
           <span>Start with an example</span>
@@ -112,17 +125,20 @@
           <div class="input-panel">
             <div class="panel-head">
               <div class="file-label">
-                <span class="file-icon" aria-hidden="true">{ }</span
+                <span class="file-icon" data-icon="code" aria-hidden="true"></span
                 ><label for="input">Raw output</label
                 ><span class="file-extension">input.json</span>
               </div>
-              <button
-                id="format"
-                class="text-button"
-                title="Safely format valid JSON"
-              >
-                Format JSON
-              </button>
+              <div class="editor-tools">
+                <button id="clear-input" class="text-button"><span data-icon="clear"></span>Clear</button
+                ><button
+                  id="format"
+                  class="text-button"
+                  title="Safely format valid JSON"
+                >
+                  <span data-icon="format"></span>Format JSON
+                </button>
+              </div>
             </div>
             <div class="input-editor">
               <pre id="line-numbers" aria-hidden="true">1</pre>
@@ -142,11 +158,11 @@
           <div class="output-panel" data-state="neutral">
             <div class="panel-head">
               <div class="file-label">
-                <span class="file-icon" aria-hidden="true">{ }</span
+                <span class="file-icon" data-icon="validated" aria-hidden="true"></span
                 ><span>Validated output</span
                 ><span class="file-extension">output.json</span>
               </div>
-              <button id="copy" class="text-button" disabled>Copy JSON</button>
+              <button id="copy" class="text-button" disabled><span data-icon="copy"></span>Copy JSON</button>
             </div>
             <div class="output-body">
               <div class="result-summary">
@@ -177,6 +193,13 @@ Your result will appear here.</pre>
         <div class="actions">
           <div>
             <button id="reset" class="reset-button">↺ Reset playground</button
+            ><button
+              id="expand-editors"
+              class="reset-button"
+              aria-expanded="false"
+              aria-controls="schema-panel"
+            >
+              Expand editors</button
             ><span class="session-note"
               >Processed in memory. Never stored.</span
             >
@@ -199,13 +222,24 @@ Your result will appear here.</pre>
         </details>
         <p id="notice" role="status" aria-live="polite"></p>
         <div id="result" aria-live="polite" aria-atomic="true">
+          <div id="outcome-note" class="outcome-note" hidden>
+            <span id="outcome-symbol" aria-hidden="true"></span>
+            <div>
+              <strong id="outcome-title"></strong>
+              <p id="outcome-detail"></p>
+              <ul id="change-summary" aria-label="Applied transformations"></ul>
+            </div>
+            <button id="edit-input" class="reset-button" hidden>
+              <span data-icon="edit"></span>Edit input
+            </button>
+          </div>
           <div id="errors-section" hidden>
             <h3>Validation issues</h3>
             <ul id="errors"></ul>
           </div>
           <div class="timeline-heading">
             <div>
-              <span class="trace-icon" aria-hidden="true">≡</span>
+              <span class="trace-icon" data-icon="timeline" aria-hidden="true"></span>
               <h3>Repair timeline</h3>
             </div>
             <span id="attempts">Every attempt, accounted for</span>
@@ -238,7 +272,7 @@ Your result will appear here.</pre>
         <div class="how-grid">
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
-              <div class="process-icon" aria-hidden="true">{ }</div>
+              <div class="process-icon" data-icon="code" aria-hidden="true"></div>
               <span class="number">01. Parse</span>
               <h3>Start with the original.</h3>
               <p>
@@ -249,7 +283,7 @@ Your result will appear here.</pre>
           >
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
-              <div class="process-icon" aria-hidden="true">↔</div>
+              <div class="process-icon" data-icon="repair" aria-hidden="true"></div>
               <span class="number">02. Repair</span>
               <h3>Fix syntax, keep meaning.</h3>
               <p>
@@ -260,7 +294,7 @@ Your result will appear here.</pre>
           >
           <a class="process-card" href="#playground"
             ><article class="process-card-inner">
-              <div class="process-icon" aria-hidden="true">✓</div>
+              <div class="process-icon" data-icon="check" aria-hidden="true"></div>
               <span class="number">03. Validate</span>
               <h3>Get an answer you can inspect.</h3>
               <p>
@@ -271,14 +305,7 @@ Your result will appear here.</pre>
           >
         </div>
         <div class="privacy">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M12 3 4 6v6c0 4 4 7 8 9 4-2 8-5 8-9V6l-8-3Z"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-            <path d="m8 12 3 3 5-6" stroke="currentColor" stroke-width="1.5" />
-          </svg>
+          <span data-icon="shield" aria-hidden="true"></span>
           <p>
             Your input stays in request memory. It is never stored or written to
             application logs.<br />This is a deterministic demo. It cannot
@@ -294,13 +321,13 @@ Your result will appear here.</pre>
             signup or API key required.
           </p>
           <a href="/docs" class="developer-link"
-            >Explore the API docs <span aria-hidden="true">↗</span></a
+            >Explore the API docs <span data-icon="external" aria-hidden="true"></span></a
           >
         </div>
         <div class="request">
           <div class="panel-head">
             <span><span class="http-method">POST</span> /v1/validate</span
-            ><button id="copy-request" class="text-button">Copy request</button>
+            ><button id="copy-request" class="text-button"><span data-icon="copy"></span>Copy request</button>
           </div>
           <pre id="api-request"></pre>
           <div class="request-foot">

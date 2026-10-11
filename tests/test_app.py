@@ -31,6 +31,23 @@ def test_health_and_frontend(client):
     assert len(schemas['schemas']) == len(schemas['definitions']) == 3
 
 
+def test_database_unconfigured(client, monkeypatch):
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    assert client.get('/health/database').status_code == 503
+    assert client.get('/health').status_code == 200
+
+
+def test_database_error_does_not_expose_credentials(client, monkeypatch):
+    secret = "postgresql://user:private-password@localhost/test"
+    monkeypatch.setenv("DATABASE_URL", secret)
+    def fail(*args, **kwargs):
+        raise main.psycopg.OperationalError(secret)
+    monkeypatch.setattr(main.psycopg, "connect", fail)
+    response = client.get('/health/database')
+    assert response.status_code == 503
+    assert "private-password" not in response.text
+
+
 def test_valid_and_compatibility(client):
     result = post(client).json()
     assert result['status'] == 'valid'

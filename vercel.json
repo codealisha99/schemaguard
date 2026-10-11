@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/v1/:path*", "destination": "https://api-production-2476.up.railway.app/v1/:path*" },
+    { "source": "/health/:path*", "destination": "https://api-production-2476.up.railway.app/health/:path*" },
+    { "source": "/health", "destination": "https://api-production-2476.up.railway.app/health" },
+    { "source": "/docs", "destination": "https://api-production-2476.up.railway.app/docs" },
+    { "source": "/redoc", "destination": "https://api-production-2476.up.railway.app/redoc" },
+    { "source": "/openapi.json", "destination": "https://api-production-2476.up.railway.app/openapi.json" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'" }
+      ]
+    }
+  ]
+}

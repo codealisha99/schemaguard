@@ -91,6 +91,7 @@ function renderOutput(value, message = "No schema-valid output.") {
 }
 function clearResult() {
   SchemaGuardUI.renderRunButton($("run"));
+  $("outcome-note").hidden = true;
   lastOutput = null;
   $("copy").disabled = true;
   $("errors-section").hidden = true;
@@ -117,7 +118,8 @@ function addStep(title, description, outcome, symbol) {
   li.className = outcome;
   const dot = document.createElement("span");
   dot.className = "step-dot";
-  dot.textContent = symbol;
+  if (["✓", "!", "·"].includes(symbol)) dot.append(Hugeicons.create(symbol === "✓" ? "check" : symbol === "!" ? "alert" : "timeline"));
+  else dot.textContent = symbol;
   const text = document.createElement("div");
   text.textContent = title;
   const detail = document.createElement("span");
@@ -145,6 +147,78 @@ for (const [kind, label] of Object.entries(labels)) {
   button.addEventListener("click", () => loadExample(kind));
   $("examples").append(button);
 }
+const schemaHints = {
+  UserProfile: "A name, age from 0 to 150, and a list of skills.",
+  ProductListing:
+    "A title, non-negative price, supported currency, and stock status.",
+  SupportTicket: "A subject, description, priority, and a list of tags.",
+};
+function renderContract() {
+  const definition = definitions[$("schema").value];
+  $("contract-fields").replaceChildren();
+  $("schema-hint").textContent = definition
+    ? schemaHints[$("schema").value]
+    : "Loading schema requirements…";
+  if (!definition) return;
+  for (const name of definition.required || []) {
+    const field = definition.properties[name],
+      item = document.createElement("li");
+    const key = document.createElement("strong");
+    key.textContent = name;
+    const type = document.createElement("span");
+    type.textContent = field.enum
+      ? field.enum.join(" | ")
+      : field.type === "array"
+        ? `${field.items?.type || "value"}[]`
+        : field.type;
+    item.append(key, type);
+    $("contract-fields").append(item);
+  }
+}
+function showOutcome(result) {
+  const note = $("outcome-note");
+  note.hidden = false;
+  note.dataset.state = result.status;
+  const text = {
+    valid: [
+      "✓",
+      "Matches the contract.",
+      "Validated directly. No repairs or fallback needed.",
+    ],
+    repaired: [
+      "✓",
+      `${result.retries} syntax repair${result.retries === 1 ? "" : "s"}. Schema validated.`,
+      "Your original values were preserved. No fallback was used.",
+    ],
+    fallback: [
+      "↩",
+      "A fallback replaced the failed input.",
+      "This is the explicitly supplied sample, validated against the selected schema.",
+    ],
+    failure: [
+      "!",
+      "No validated output.",
+      "Review the field issues or edit the syntax. Missing values are never guessed.",
+    ],
+  }[result.status];
+  $("outcome-symbol").replaceChildren(Hugeicons.create(result.status === "failure" ? "alert" : result.status === "fallback" ? "fallback" : "check"));
+  $("outcome-title").textContent = text[1];
+  $("outcome-detail").textContent = text[2];
+  $("edit-input").hidden = !["failure", "fallback"].includes(result.status);
+  const changes = {
+    fences: "Markdown fences removed",
+    quotes: "Single-quoted strings converted",
+    commas: "Trailing commas removed",
+  };
+  $("change-summary").replaceChildren();
+  for (const step of result.repair_steps.filter(
+    (step) => step.outcome === "repaired",
+  )) {
+    const li = document.createElement("li");
+    li.textContent = changes[step.stage] || step.message;
+    $("change-summary").append(li);
+  }
+}
 function updateSchema() {
   $("schema-view").textContent = definitions[$("schema").value]
     ? pretty(definitions[$("schema").value])
@@ -153,6 +227,7 @@ function updateSchema() {
   $("schema-fields").textContent = Object.keys(samples[$("schema").value]).join(
     " · ",
   );
+  renderContract();
   loadExample("fences");
 }
 $("schema").addEventListener("change", updateSchema);
@@ -177,6 +252,9 @@ $("format").addEventListener("click", async () => {
   if (busy) return;
   SchemaGuardUI.renderRunButton($("run"));
   setBusy(true, "idle", false);
+  Hugeicons.label($("format"), "loading", "Formatting…");
+  $("format").querySelector("svg").classList.add("run-spinner");
+  $("format").setAttribute("aria-busy", "true");
   const abort = new AbortController(),
     timeout = setTimeout(() => abort.abort(), 15000);
   try {
@@ -201,20 +279,30 @@ $("format").addEventListener("click", async () => {
     $("notice").textContent =
       error.name === "AbortError"
         ? "Formatting timed out. Try again."
-        : error.message;
+        : error instanceof TypeError
+          ? "Could not reach the service. Check your connection and try again."
+          : error.message;
   } finally {
     clearTimeout(timeout);
     setBusy(false, "idle", false);
+    Hugeicons.label($("format"), "format", "Format JSON");
+    $("format").setAttribute("aria-busy", "false");
   }
 });
+const copyFeedback = new WeakMap();
 async function copy(text, button) {
   try {
     await navigator.clipboard.writeText(text);
-    const original = button.textContent;
-    button.textContent = "Copied";
-    setTimeout(() => {
-      button.textContent = original;
+    if ($("notice").textContent.startsWith("Clipboard unavailable")) $("notice").textContent = "";
+    const previous = copyFeedback.get(button);
+    if (previous) clearTimeout(previous.timer);
+    const original = previous?.original || Array.from(button.childNodes, node => node.cloneNode(true));
+    Hugeicons.label(button, "check", "Copied");
+    const timer = setTimeout(() => {
+      button.replaceChildren(...original);
+      copyFeedback.delete(button);
     }, 1500);
+    copyFeedback.set(button, {original, timer});
   } catch {
     $("notice").textContent =
       "Clipboard unavailable. Select and copy the text manually.";
@@ -285,6 +373,7 @@ $("run").addEventListener("click", async () => {
       );
     const result = await response.json();
     outcome = result.status;
+    showOutcome(result);
     const messages = {
       valid: [
         "Valid input",
@@ -372,9 +461,12 @@ fetch("/v1/schemas")
   })
   .then((data) => {
     definitions = data.definitions;
+    renderContract();
     $("schema-view").textContent = pretty(definitions[$("schema").value]);
   })
   .catch(() => {
+    $("schema-hint").textContent =
+      "Schema definitions unavailable. Reload or open the API docs.";
     $("schema-view").textContent =
       "Could not load schema definitions. Reload the page or open /docs.";
   });
@@ -423,3 +515,24 @@ SchemaGuardUI.createSchemaTabs(
   $("schema-panel"),
 );
 SchemaGuardUI.initHoverCards(document.querySelector(".how-grid"));
+
+$("clear-input").addEventListener("click", () => {
+  $("input").value = "";
+  $("input").dispatchEvent(new Event("input"));
+  $("input").focus();
+});
+$("expand-editors").addEventListener("click", () => {
+  const expanded = $("expand-editors").getAttribute("aria-expanded") !== "true";
+  $("playground").classList.toggle("editors-expanded", expanded);
+  $("expand-editors").setAttribute("aria-expanded", String(expanded));
+  Hugeicons.label($("expand-editors"), expanded ? "compact" : "expand", expanded ? "Compact editors" : "Expand editors");
+});
+$("edit-input").addEventListener("click", () => {
+  $("input").focus();
+  $("input").scrollIntoView({
+    block: "center",
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "instant"
+      : "smooth",
+  });
+});
