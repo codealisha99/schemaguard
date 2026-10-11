@@ -8,13 +8,20 @@
     matchMedia("(prefers-reduced-motion: reduce)").matches;
   const feedbackTimers = new WeakMap();
   function icon(kind) {
-    const svg = Hugeicons.create({loading:"loading", passed:"check", failure:"alert", fallback:"fallback", idle:"arrow"}[kind]);
+    const svg = Hugeicons.create(
+      {
+        loading: "loading",
+        passed: "check",
+        failure: "alert",
+        fallback: "fallback",
+        idle: "arrow",
+      }[kind],
+    );
     svg.classList.add("run-icon");
     if (kind === "loading") svg.classList.add("run-spinner");
     return svg;
   }
 
-  // Aceternity Stateful Button: loading icon, actual outcome, brief feedback.
   function renderRunButton(button, state = "idle") {
     clearTimeout(feedbackTimers.get(button));
     button.dataset.state = state;
@@ -52,7 +59,6 @@
       );
   }
 
-  // Aceternity Tabs: one active rounded surface travels between selections.
   function createSchemaTabs(container, select, panel) {
     const activeSurface = document.createElement("span");
     activeSurface.className = "schema-tab-surface";
@@ -127,43 +133,5 @@
     sync(false);
   }
 
-  // Aceternity Card Hover Effect: shared background around the active card.
-  function initHoverCards(container) {
-    const halo = document.createElement("span");
-    halo.className = "card-hover-surface";
-    halo.setAttribute("aria-hidden", "true");
-    const cards = Array.from(container.querySelectorAll(".process-card"));
-    function activate(card) {
-      const old = halo.isConnected ? halo.getBoundingClientRect() : null;
-      halo.getAnimations().forEach((animation) => animation.cancel());
-      card.prepend(halo);
-      const current = halo.getBoundingClientRect();
-      if (!reducedMotion())
-        halo.animate(
-          old
-            ? [
-                {
-                  opacity: 1,
-                  transform: `translate(${old.x - current.x}px, ${old.y - current.y}px) scale(${old.width / current.width}, ${old.height / current.height})`,
-                },
-                { opacity: 1, transform: "translate(0, 0) scale(1)" },
-              ]
-            : [{ opacity: 0 }, { opacity: 1 }],
-          { duration: 220, easing: "ease-out" },
-        );
-    }
-    cards.forEach((card) => {
-      card.addEventListener("pointerenter", (event) => {
-        if (event.pointerType !== "touch") activate(card);
-      });
-      card.addEventListener("focusin", () => activate(card));
-    });
-    container.addEventListener("pointerleave", () => {
-      if (!container.contains(document.activeElement)) halo.remove();
-    });
-    container.addEventListener("focusout", (event) => {
-      if (!container.contains(event.relatedTarget)) halo.remove();
-    });
-  }
-  window.SchemaGuardUI = { renderRunButton, createSchemaTabs, initHoverCards };
+  window.SchemaGuardUI = { renderRunButton, createSchemaTabs };
 })();

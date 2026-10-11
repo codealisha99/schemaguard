@@ -33,6 +33,11 @@ def test_health_and_frontend(client):
     assert "script-src 'self';" in page.headers['content-security-policy']
     assert client.get('/static/app.js').status_code == 200
     assert 'https://cdn.jsdelivr.net' in client.get('/docs').headers['content-security-policy']
+    docs = client.get('/docs').text
+    assert 'aria-current="page"' in docs and 'API docs · SchemaGuard' in docs
+    assert '/static/docs.css' in docs and '/static/icon.svg' in docs
+    assert 'API reference · SchemaGuard' in client.get('/redoc').text
+    assert client.get('/docs/oauth2-redirect').status_code == 200
     assert client.get('/openapi.json').status_code == 200
     schemas = client.get('/v1/schemas').json()
     assert len(schemas['schemas']) == len(schemas['definitions']) == 3

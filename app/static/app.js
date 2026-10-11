@@ -1,5 +1,7 @@
 "use strict";
-const currentNav = document.querySelector(document.body.dataset.page === "playground" ? ".nav-playground" : ".brand");
+const currentNav = document.querySelector(
+  document.body.dataset.page === "playground" ? ".nav-playground" : ".brand",
+);
 currentNav.setAttribute("aria-current", "page");
 const $ = (id) => document.getElementById(id);
 const samples = {
@@ -31,8 +33,7 @@ const labels = {
 };
 let definitions = {},
   busy = false,
-  lastOutput = null,
-  controller = null;
+  lastOutput = null;
 const pretty = (value) => JSON.stringify(value, null, 2);
 function example(kind) {
   const obj = structuredClone(samples[$("schema").value]);
@@ -42,7 +43,12 @@ function example(kind) {
   if (kind === "quotes") return json.replaceAll('"', "'");
   if (kind === "mismatch") {
     delete obj[Object.keys(obj)[0]];
-    obj.age = "not a number";
+    const invalidField = {
+      UserProfile: "age",
+      ProductListing: "price",
+      SupportTicket: "priority",
+    }[$("schema").value];
+    obj[invalidField] = "invalid value";
     return pretty(obj);
   }
   if (kind === "broken")
@@ -120,7 +126,12 @@ function addStep(title, description, outcome, symbol) {
   li.className = outcome;
   const dot = document.createElement("span");
   dot.className = "step-dot";
-  if (["✓", "!", "·"].includes(symbol)) dot.append(Hugeicons.create(symbol === "✓" ? "check" : symbol === "!" ? "alert" : "timeline"));
+  if (["✓", "!", "·"].includes(symbol))
+    dot.append(
+      Hugeicons.create(
+        symbol === "✓" ? "check" : symbol === "!" ? "alert" : "timeline",
+      ),
+    );
   else dot.textContent = symbol;
   const text = document.createElement("div");
   text.textContent = title;
@@ -203,7 +214,15 @@ function showOutcome(result) {
       "Review the field issues or edit the syntax. Missing values are never guessed.",
     ],
   }[result.status];
-  $("outcome-symbol").replaceChildren(Hugeicons.create(result.status === "failure" ? "alert" : result.status === "fallback" ? "fallback" : "check"));
+  $("outcome-symbol").replaceChildren(
+    Hugeicons.create(
+      result.status === "failure"
+        ? "alert"
+        : result.status === "fallback"
+          ? "fallback"
+          : "check",
+    ),
+  );
   $("outcome-title").textContent = text[1];
   $("outcome-detail").textContent = text[2];
   $("edit-input").hidden = !["failure", "fallback"].includes(result.status);
@@ -295,16 +314,19 @@ const copyFeedback = new WeakMap();
 async function copy(text, button) {
   try {
     await navigator.clipboard.writeText(text);
-    if ($("notice").textContent.startsWith("Clipboard unavailable")) $("notice").textContent = "";
+    if ($("notice").textContent.startsWith("Clipboard unavailable"))
+      $("notice").textContent = "";
     const previous = copyFeedback.get(button);
     if (previous) clearTimeout(previous.timer);
-    const original = previous?.original || Array.from(button.childNodes, node => node.cloneNode(true));
+    const original =
+      previous?.original ||
+      Array.from(button.childNodes, (node) => node.cloneNode(true));
     Hugeicons.label(button, "check", "Copied");
     const timer = setTimeout(() => {
       button.replaceChildren(...original);
       copyFeedback.delete(button);
     }, 1500);
-    copyFeedback.set(button, {original, timer});
+    copyFeedback.set(button, { original, timer });
   } catch {
     $("notice").textContent =
       "Clipboard unavailable. Select and copy the text manually.";
@@ -350,7 +372,7 @@ $("run").addEventListener("click", async () => {
   $("result-status").textContent = "Validating…";
   $("result-description").textContent =
     "Parsing your input and checking the selected schema.";
-  controller = new AbortController();
+  const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
     const body = {
@@ -473,7 +495,6 @@ fetch("/v1/schemas")
       "Could not load schema definitions. Reload the page or open /docs.";
   });
 
-// Native platform shortcut; the button remains the primary, accessible action.
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
 document.querySelector(".shortcut kbd").textContent = isMac ? "⌘" : "Ctrl";
 document.addEventListener("keydown", (event) => {
@@ -516,7 +537,6 @@ SchemaGuardUI.createSchemaTabs(
   $("schema"),
   $("schema-panel"),
 );
-SchemaGuardUI.initHoverCards(document.querySelector(".how-grid"));
 
 $("clear-input").addEventListener("click", () => {
   $("input").value = "";
@@ -527,7 +547,11 @@ $("expand-editors").addEventListener("click", () => {
   const expanded = $("expand-editors").getAttribute("aria-expanded") !== "true";
   $("playground").classList.toggle("editors-expanded", expanded);
   $("expand-editors").setAttribute("aria-expanded", String(expanded));
-  Hugeicons.label($("expand-editors"), expanded ? "compact" : "expand", expanded ? "Compact editors" : "Expand editors");
+  Hugeicons.label(
+    $("expand-editors"),
+    expanded ? "compact" : "expand",
+    expanded ? "Compact editors" : "Expand editors",
+  );
 });
 $("edit-input").addEventListener("click", () => {
   $("input").focus();

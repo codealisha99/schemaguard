@@ -26,6 +26,10 @@ uvicorn app.main:app --host 0.0.0.0 --port 8006 --reload --no-access-log
 
 Run tests with `pytest`. The existing 70% coverage gate is retained. Runtime dependencies live in `requirements.txt`; test dependencies live in `requirements-dev.txt`.
 
+Build and verify the frontend with `npm run build && npm run check:frontend`.
+The visual conventions are documented in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md);
+the local redesign verification is recorded in [AUDIT_REPORT.md](AUDIT_REPORT.md).
+
 ## Docker
 
 Run from **06-schemaguard**, so other projects are outside the build context:
