@@ -9,7 +9,8 @@
   "maintainers": [
     {
       "name": "Alisha Karma",
-      "url": "https://github.com/codealisha99"
+      "url": "https://github.com/codealisha99",
+      "email": "lishykarma99@gmail.com"
     }
   ],
   "scripts": {
@@ -18,5 +19,10 @@
     "dev": "uvicorn app.main:app --host 0.0.0.0 --port 8006 --reload --no-access-log",
     "start": "python -m app.run",
     "check:frontend": "node scripts/check-frontend.mjs"
+  },
+  "author": {
+    "name": "Alisha Karma",
+    "url": "https://alishakarma.com",
+    "email": "lishykarma99@gmail.com"
   }
 }

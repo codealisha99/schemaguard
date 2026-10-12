@@ -50,7 +50,7 @@ The only elevated shadow belongs to schema disclosure. Editors stack at 650 px; 
 
 ## Shared components and behavior
 
-- Product header, active navigation, footer, maintenance/contact links, and matching favicon.
+- Product header, active navigation, footer, maintenance/contact links, and matching favicon. The header and favicon share `app/static/icon.svg` rather than duplicating SVG geometry.
 - Primary/secondary actions with hover, focus, disabled, busy, success, fallback, and failure feedback.
 - Keyboard schema tabs with roving focus, arrows, Home, End, and a shared selected surface.
 - Schema contracts generated from the API, native schema/fallback disclosures, and Escape dismissal for schema inspection.

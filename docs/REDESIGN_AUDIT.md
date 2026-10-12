@@ -53,7 +53,7 @@ There are no authenticated page blockers. APIs are excluded from the page count.
 - Added descriptive social metadata; retained product-specific identity and favicon. No unsupported canonical URL, social-preview image claim, or installable-app claim was added.
 - Read-only `gh repo view codealisha99/schemaguard --json name,description,repositoryTopics,defaultBranchRef` succeeded: default branch `main`; description empty; topics unset. Remote metadata was not changed. Suggested description: “Deterministic JSON repair and strict schema validation with an inspectable trace.” Suggested topics: `json`, `json-schema`, `fastapi`, `pydantic`, `structured-output`.
 - Existing Aceternity, Hugeicons/MIT, Manrope/OFL, and JetBrains Mono/OFL notices remain unchanged. No root project license was present; one was not invented. Historical audit/deployment records remain intact and labeled as prior evidence.
-- Git history, author identities, Git configuration, remote URL, branch, and repository permissions remain unchanged. Initial tree was clean; final changes are local and uncommitted. No push or deployment occurred.
+- Git history, author identities, Git configuration, remote URL, branch, and repository permissions remain unchanged. The initial tree was clean. At the end of this local verification pass, changes were uncommitted and no push or deployment had occurred; the later authorized commit/push is recorded below.
 
 ## Code and integration audit
 
@@ -104,3 +104,5 @@ No functional regressions remained in the checks that ran. This report describes
 ## Subsequent publication authorization
 
 After the local audit, the owner requested committing and pushing this redesign to `origin/main`. The local verification results above remain unchanged; hosted deployment behavior has not been revalidated. The authenticated GitHub account is `codealisha99`, but its token cannot read verified email addresses. Existing Git commit identity was retained; no email address or historical author was changed.
+
+The authorized redesign was committed and pushed as `5cafb6f1d63f3db69bb2cc53a20ec0796a9bf25b` on `main`. This records publication of the reviewed source; it does not claim a new hosted deployment verification.
