@@ -1,4 +1,8 @@
 FROM python:3.13-slim
+LABEL org.opencontainers.image.title="SchemaGuard" \
+      org.opencontainers.image.description="Deterministic JSON repair and strict schema validation" \
+      org.opencontainers.image.source="https://github.com/codealisha99/schemaguard" \
+      org.opencontainers.image.authors="Alisha Karma (codealisha99)"
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY requirements.txt .

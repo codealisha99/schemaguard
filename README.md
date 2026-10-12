@@ -1,5 +1,7 @@
 # SchemaGuard
 
+<img src="app/static/icon.svg" alt="SchemaGuard logo" width="64" height="64" />
+
 Turn messy LLM output into validated JSON. A public playground and API served together by FastAPI, with vanilla HTML/CSS/JavaScript and three strict Pydantic schemas. No database, API key, LLM, or paid model call is required.
 
 The playground includes editable input, six examples per schema, readable output, validation issues, an actual repair timeline, an opt-in sample fallback, copy, safe formatting, and reset. Submitted content stays in request memory; application logs do not contain it. External infrastructure may have its own logging policy.
@@ -34,7 +36,7 @@ the current local redesign verification is recorded in [docs/REDESIGN_AUDIT.md](
 
 ## Docker
 
-Run from **06-schemaguard**, so other projects are outside the build context:
+Run from the cloned **schemaguard** repository root, so other projects are outside the build context:
 
 ```bash
 docker build -t schemaguard .
@@ -92,19 +94,21 @@ The playground uses `textContent` for input-derived output, errors, and traces, 
 
 No required user-provided variables or secrets.
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `DATABASE_URL` | unset | Optional pooled Neon Postgres URL, used only by `/health/database`. |
-| `PORT` | `8006` | HTTP port; Railway injects this automatically. |
-| `RATE_LIMIT_PER_MINUTE` | `60` | Requests per peer IP per rolling minute. Use a positive integer. |
-| `RATE_LIMIT_GLOBAL_PER_MINUTE` | `180` | Requests per instance per rolling minute. Use a positive integer. |
-| `TRUSTED_PROXY_IPS` | `127.0.0.1` | Uvicorn's trusted proxy addresses/CIDRs. Only verified proxies should be trusted. |
+| Variable                       | Default     | Purpose                                                                           |
+| ------------------------------ | ----------- | --------------------------------------------------------------------------------- |
+| `DATABASE_URL`                 | unset       | Optional pooled Neon Postgres URL, used only by `/health/database`.               |
+| `PORT`                         | `8006`      | HTTP port; Railway injects this automatically.                                    |
+| `RATE_LIMIT_PER_MINUTE`        | `60`        | Requests per peer IP per rolling minute. Use a positive integer.                  |
+| `RATE_LIMIT_GLOBAL_PER_MINUTE` | `180`       | Requests per instance per rolling minute. Use a positive integer.                 |
+| `TRUSTED_PROXY_IPS`            | `127.0.0.1` | Uvicorn's trusted proxy addresses/CIDRs. Only verified proxies should be trusted. |
 
 Without a trusted proxy configuration, visitors behind the same proxy share its per-IP allowance. Arbitrary forwarded headers are ignored. Configure `TRUSTED_PROXY_IPS` only with verified infrastructure addresses; do not set `*` on an app that can receive direct untrusted traffic. The global limit applies regardless of forwarded headers. `LLM_PROVIDER` is unused and unnecessary.
 
 ## Maintenance and contributions
 
-Primary maintainer: [Alisha Karma](https://alishakarma.com) ([codealisha99](https://github.com/codealisha99)). Contact: [lishykarma99@gmail.com](mailto:lishykarma99@gmail.com). Historical Git authorship remains intact; maintenance attribution does not claim sole authorship of existing code. See [CONTRIBUTING.md](CONTRIBUTING.md) for local checks and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for component and font credits.
+Project creator, declared primary author, and maintainer: [Alisha Karma](https://alishakarma.com) ([codealisha99](https://github.com/codealisha99)). Contact: [lishykarma99@gmail.com](mailto:lishykarma99@gmail.com). This project identity is supplied by the owner. Historical Git authorship remains intact; primary-author attribution does not claim that all existing code was written by one person. See [CONTRIBUTING.md](CONTRIBUTING.md) for local checks and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for component and font credits.
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the code and build structure, and [docs/OWNERSHIP_AUDIT.md](docs/OWNERSHIP_AUDIT.md) for the current identity, contributor, GitHub-settings, and branding audit.
 
 ## Recorded deployment configuration
 
