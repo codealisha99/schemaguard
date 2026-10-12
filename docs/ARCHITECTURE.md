@@ -26,7 +26,7 @@ The playground sends same-origin requests to `/v1/validate`. The server bounds t
 
 Fallback is explicit and validated against the same schema. A fallback result is reported separately from valid or repaired input. Response aliases remain available for existing API clients. The frontend renders input-derived content as text nodes, preserving literal JSON without executing HTML.
 
-Resource limits and error status codes are documented in [README.md](../README.md). Rate counters are bounded, in-memory, per-process values; they are not distributed across replicas. No database migrations or authentication system exists. `DATABASE_URL` is optional and used only by the explicit `/health/database` read-only connectivity probe.
+Resource limits and error status codes are documented in [PROJECT_GUIDE.md](PROJECT_GUIDE.md). Rate counters are bounded, in-memory, per-process values; they are not distributed across replicas. No database migrations or authentication system exists. `DATABASE_URL` is optional and used only by the explicit `/health/database` read-only connectivity probe.
 
 ## Local and recorded production layouts
 
